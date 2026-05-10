@@ -55,7 +55,8 @@ except Exception as e:
     sys.exit(1)
 
 try:
-    signal.pause()
+    while not ending_session:
+        signal.pause()
 except Exception as e:
     logging.critical(f"Failed to terminate the subprocesses : {e}")
     shutdown()
