@@ -43,7 +43,7 @@ tx = board.TX
 uart = serial.Serial("/dev/serial0", baudrate=9600, timeout=10)
 
 # Create an GPS instance
-gps = adafruit_gps.GPS(uart, debug=False) # Use UART/pyserial
+gps = adafruit_gps.GPS(uart, debug=False)
 
 # Turn on the basic GGA and RMC info, then set update rate to 2Hz
 gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")

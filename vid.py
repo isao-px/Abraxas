@@ -8,6 +8,14 @@ import time
 import os
 from datetime import datetime
 
+# Interruption depuis master.py ou par Ctrl+C
+running = True
+def stop_handler(sig, frame):
+    global running
+    running = False
+signal.signal(signal.SIGTERM, stop_handler)
+signal.signal(signal.SIGINT, stop_handler)
+
 sys_data_base = False
 try:
     session_id = sys.argv[1]
