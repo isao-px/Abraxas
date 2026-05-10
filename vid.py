@@ -8,7 +8,7 @@ import time
 import os
 from datetime import datetime
 
-# Interruption depuis master.py ou par Ctrl+C
+# Interruption externe
 running = True
 def stop_handler(sig, frame):
     global running
@@ -46,14 +46,6 @@ def watch_first_segment(folder):
 watcher = threading.Thread(target=watch_first_segment, args=(folder,))
 watcher.daemon = True
 watcher.start()
-
-# Interruption externe
-running = True
-def stop_handler(sig, frame):
-    global running
-    running = False
-signal.signal(signal.SIGTERM, stop_handler)
-signal.signal(signal.SIGINT, stop_handler)
 
 cmd = [
     "rpicam-vid",
