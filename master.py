@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 import signal
 
-ending_session = True
+ending_session = False
 
 def handle_usr1(signum, frame):
     global ending_session
