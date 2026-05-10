@@ -4,9 +4,13 @@ import subprocess
 import os
 import sys
 
-sys_data_base = SysDataBase(__file__)
-sys_data_base.session_id = sys.argv[1]
-relative_path = os.path.join('sessions', str(sys_data_base.session_id))
+sys_data_base = False
+try:
+    session_id = sys.argv[1]
+except Exception as e:
+    sys_data_base = SysDataBase(__file__)
+    session_id = sys_data_base.session_id
+relative_path = os.path.join('sessions', str(session_id))
 absolute_path = os.path.join(os.getcwd(), relative_path)
 
 logging.info(f"Starting")
@@ -50,7 +54,9 @@ except Exception as e:
     sys.exit(1)
 
 finally:
-    sys_data_base.conn.close()
+    if sys_data_base:
+        logging.debug("Closing database connection")
+        sys_data_base.conn.close()
     if os.path.exists("list.txt"):
         os.remove("list.txt")
     logging.info(f"{__file__} terminated")
