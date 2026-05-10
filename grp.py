@@ -47,7 +47,6 @@ try:
 
 except Exception as e:
     logging.error(f"Failed to merge videos : {e}")
-    sys_data_base.conn.close()
     sys.exit(1)
 
 finally:
