@@ -97,6 +97,7 @@ cd /home/user || exit
 git -y clone https://github.com/isao-px/abraxas.git
 mv abraxas/*.py /home/user/
 rm -rf abraxas
+echo "Code downloaded successfully"
 
 # Cleanup
 rm config.sh
