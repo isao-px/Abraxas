@@ -39,7 +39,7 @@ pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-acti
 cd /home/user || exit
 echo "GPS installed successfully"
 
-# DB
+#
 echo "Initializing database"
 cd /home/user || exit
 touch sys.db
