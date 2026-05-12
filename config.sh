@@ -90,3 +90,5 @@ sqlite3 sys.db "CREATE TABLE sessions (
     name VARCHAR);"
 cd /home/user || exit
 echo "Database initialized successfully"
+
+rm config.sh
