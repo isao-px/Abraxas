@@ -91,4 +91,12 @@ sqlite3 sys.db "CREATE TABLE sessions (
 cd /home/user || exit
 echo "Database initialized successfully"
 
+# Download code
+echo "Downloading code"
+cd /home/user || exit
+git -y clone https://github.com/isao-px/abraxas.git
+mv abraxas/*.py /home/user/
+rm -rf abraxas
+
+# Cleanup
 rm config.sh
