@@ -4,6 +4,15 @@ touch sys.log
 exec > sys.log 2>&1
 echo "Starting configuration script at $(date +%Y%m%d_%H%M%S)"
 
+user_check() {
+	if [ "$(id -u)" -eq 0 ]; then
+		echo "User check passed, running as $(whoami)"
+	else
+	  fatal "Script should be running as root. Try 'sudo ./install.sh'\n"
+	fi
+}
+user_check
+
 apt-get update
 apt-get -y upgrade
 apt -y install tree
