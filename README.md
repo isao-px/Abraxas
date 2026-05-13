@@ -8,7 +8,11 @@ For full documentation, read [Documentation.pdf](https://github.com/isao-px/Abra
 The full hardwear setup is described in the documentation, but for the instalation you'll only need a networked connected Raspberry Pi Zero 2 initialized with a decetly recent version of Raspberry Pi OS Lite (64-bit).
 
 ## Full install
-You'll need to have Raspberry Pi OS Lite (64-bit) working on your Raspberry, on which the username is "user". The Raspberry has to be network connected.
+
+### Disclaimer
+Please pay attention that the installation shall only be conducted as root. As it runs system-wide, it is very likely that every other previous installation, depedencies on the Raspberry may be corrupted. Furthermore, the installation provides no security against file replacement, so previous work saved on the Raspberry might very well desappear without warning. Therefore, **it is highly recommended to run the installation only on an empty system.**
+
+To proceed with the installation, you'll need to have Raspberry Pi OS Lite (64-bit) working on your Raspberry. The Raspberry has to be network connected.
 
 First download the config.sh file, then make it executable and run it as root. Thw installation should start and be conducted entirely automaticaly.
 ```
