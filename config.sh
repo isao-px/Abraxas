@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd ~ || exit
 touch sys.log
 exec > sys.log 2>&1
 echo "Starting configuration script at $(date +%Y%m%d_%H%M%S)"
@@ -30,17 +31,17 @@ pip3 install RPi.GPIO --break-system-packages
 # IMU
 echo "Installing ICM20948 IMU"
 apt -y install git
-cd /home/user || exit
+cd ~ || exit
 git clone https://github.com/pimoroni/icm20948-python
-cd /home/user/icm20948-python || exit
+cd icm20948-python || exit
 ./install.sh -n
-cd /home/user || exit
+cd ~ || exit
 pip3 install icm20948 --break-system-packages
 echo "ICM20948 IMU installed successfully"
 
 # GPS
 echo "Installing GPS"
-cd /home/user || exit
+cd ~ || exit
 apt -y install --upgrade python3-setuptools
 apt -y install python3-venv
 python3 -m venv env --system-site-packages
@@ -49,26 +50,29 @@ pip3 install --upgrade adafruit-python-shell --break-system-packages
 wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
 sudo -E venv PATH="$PATH" python3 raspi-blinka.py
 pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
-cd /home/user || exit
+cd ~ || exit
 echo "GPS installed successfully"
 
 # Download code
 echo "Downloading code"
-cd /home/user || exit
+cd ~ || exit
 git clone https://github.com/isao-px/abraxas.git
-mv abraxas/SYS/*.py /home/user/
-mv abraxas/config.sql /home/user/config.sql
+mv abraxas/SYS/*.py .
+mv abraxas/config.sql config.sql
 rm -rf abraxas
+cd ~ || exit
 echo "Code downloaded successfully"
 
 # DB
 echo "Initializing database"
-cd /home/user || exit
+cd ~ || exit
 touch sys.db
 sqlite3 sys.db < config.sql
+cd ~ || exit
 echo "Database initialized successfully"
 
 # Cleanup
+cd ~ || exit
 rm config.sql
 echo "Configuration script completed at $(date +%Y%m%d_%H%M%S)"
 rm config.sh
