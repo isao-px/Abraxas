@@ -1,4 +1,8 @@
-# Hello World
+#!/bin/bash
+
+touch sys.log
+exec > sys.log 2>&1
+echo "Starting configuration script at $(date +%Y%m%d_%H%M%S)"
 
 apt-get update
 apt-get -y upgrade
@@ -57,4 +61,5 @@ echo "Database initialized successfully"
 
 # Cleanup
 rm config.sql
+echo "Configuration script completed at $(date +%Y%m%d_%H%M%S)"
 rm config.sh
