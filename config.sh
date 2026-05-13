@@ -76,4 +76,5 @@ cd ~ || exit
 rm config.sql
 echo "Configuration script completed at $(date +%Y%m%d_%H%M%S)"
 # rm config.sh
+echo "The Raspberry will reboot now"
 reboot
