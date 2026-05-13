@@ -1,8 +1,8 @@
 #!/bin/bash
 
 cd ~ || exit
-touch sys.log
-exec > sys.log 2>&1
+# touch sys.log
+# exec > sys.log 2>&1
 echo "Starting configuration script at $(date +%Y%m%d_%H%M%S)"
 
 user_check() {
@@ -75,5 +75,5 @@ echo "Database initialized successfully"
 cd ~ || exit
 rm config.sql
 echo "Configuration script completed at $(date +%Y%m%d_%H%M%S)"
-rm config.sh
+# rm config.sh
 reboot
