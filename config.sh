@@ -56,7 +56,7 @@ echo "GPS installed successfully"
 echo "Downloading code"
 cd /home/user || exit
 git clone https://github.com/isao-px/abraxas.git
-mv abraxas/*.py /home/user/
+mv abraxas/SYS/*.py /home/user/
 mv abraxas/config.sql /home/user/config.sql
 rm -rf abraxas
 echo "Code downloaded successfully"
@@ -72,3 +72,4 @@ echo "Database initialized successfully"
 rm config.sql
 echo "Configuration script completed at $(date +%Y%m%d_%H%M%S)"
 rm config.sh
+reboot
