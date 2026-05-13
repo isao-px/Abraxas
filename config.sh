@@ -18,7 +18,7 @@ pip3 install RPi.GPIO --break-system-packages
 echo "Installing ICM20948 IMU"
 apt -y install git
 cd /home/user || exit
-git -y clone https://github.com/pimoroni/icm20948-python
+git clone https://github.com/pimoroni/icm20948-python
 cd /home/user/icm20948-python || exit
 ./install.sh -n
 cd /home/user || exit
@@ -42,7 +42,7 @@ echo "GPS installed successfully"
 # Download code
 echo "Downloading code"
 cd /home/user || exit
-git -y clone https://github.com/isao-px/abraxas.git
+git clone https://github.com/isao-px/abraxas.git
 mv abraxas/*.py /home/user/
 mv abraxas/config.sql /home/user/config.sql
 rm -rf abraxas
