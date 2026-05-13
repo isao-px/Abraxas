@@ -10,7 +10,7 @@ The full hardwear setup is described in the documentation, but for the instalati
 ## Full install
 
 ### Disclaimer
-Please pay attention that the installation shall only be conducted as root. As it runs system-wide, it is very likely that every other previous installation, depedencies on the Raspberry may be corrupted. Furthermore, the installation provides no security against file replacement, so previous work saved on the Raspberry might very well desappear without warning. Therefore, **it is highly recommended to run the installation only on an empty system.**
+Please pay attention to the fact that the installation shall only be conducted as root. As it runs system-wide, it is very likely that every other previous installation, depedencies on the Raspberry may be corrupted. Furthermore, the installation provides no security against file replacement, so previous work saved on the Raspberry might very well desappear without warning. Therefore, **it is highly recommended to run the installation only on an empty system.**
 
 To proceed with the installation, you'll need to have [Raspberry Pi OS Lite (64-bit)](https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2026-04-21/2026-04-21-raspios-trixie-arm64-lite.img.xz) working on your Raspberry. The Raspberry has to be network connected.
 
