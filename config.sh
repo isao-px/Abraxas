@@ -14,6 +14,10 @@ user_check() {
 }
 user_check
 
+# Détermination de l'utilisateur
+user = $(ls /home | head -n 1)
+
+# Installations générales
 apt-get update
 apt-get -y upgrade
 apt -y install tree
