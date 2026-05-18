@@ -27,6 +27,7 @@ pip3 install time --break-system-packages
 pip3 install RPi.GPIO --break-system-packages
 
 # RASPICONFIG
+raspiconfig
 
 # IMU
 echo "Installing ICM20948 IMU"
