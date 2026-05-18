@@ -76,6 +76,13 @@ sqlite3 sys.db < config.sql
 cd ~ || exit
 echo "Database initialized successfully"
 
+# Configuration of cron
+chmod +x interface.py
+crontab -u "$user" -l > /tmp/cron_config
+"@reboot python3 /home/$user/interface.py" >> /tmp/cron_config
+crontab -u "$user" /tmp/cron
+rm /tmp/cron_config
+
 # Cleanup
 cd ~ || exit
 rm config.sql
