@@ -16,7 +16,7 @@ To proceed with the installation, you'll need to have [Raspberry Pi OS Lite (64-
 
 First download the config.sh file, then make it executable and run it as root. Thw installation should start and be conducted entirely automaticaly.
 ```
-cd /home/user
+cd
 curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/main/config.sh
 sudo chmod +x config.sh
 sudo ./config.sh
