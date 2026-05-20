@@ -71,8 +71,12 @@ echo "Code downloaded successfully"
 # DB
 echo "Initializing database"
 cd ~ || exit
-touch sys.db
-sqlite3 sys.db < config.sql
+if [ ! -f sys.db ]; then
+    touch sys.db
+    sqlite3 sys.db < config.sql
+else
+    echo "Database already exists"
+fi
 cd ~ || exit
 echo "Database initialized successfully"
 
