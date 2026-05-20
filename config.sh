@@ -32,6 +32,7 @@ next_step() {
 }
 
 main() {
+    next_step
     inform "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
 
     # Détermination de l'utilisateur
@@ -40,51 +41,72 @@ main() {
     # Installations générales
     inform "Updating and installing packages"
     apt-get update
+    next_step
     apt-get -y upgrade
+    next_step
     apt -y install tree
+    next_step
     apt -y install git
+    next_step
     apt -y install python3-pip
+    next_step
     apt -y install python3-full
+    next_step
     apt -y install python3-venv
+    next_step
     apt -y install sqlite3
+    next_step
     apt -y install python3-colorlog
+    next_step
     apt -y install expect
-    success "General packages installed successfully"
+    next_step
+    apt -y install --upgrade python3-setuptools
+    next_step
 
     pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
+    next_step
+    success "General packages installed successfully"
 
     # Download code
     inform "Downloading code"
     cd /home/"$user"/ || exit
     git clone https://github.com/isao-px/abraxas.git
+    next_step
     mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
     mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
     mv /home/"$user"/abraxas/auto_install.exp /home/"$user"/auto_install.exp
     rm -rf /home/"$user"/abraxas
+    next_step
     success "Code downloaded successfully"
 
     # GPS
     inform "Installing GPS"
     cd /home/"$user"/ || exit
-    apt -y install --upgrade python3-setuptools
-    apt -y install python3-venv
     python3 -m venv env --system-site-packages
     source env/bin/activate
+    next_step
     pip3 install --upgrade adafruit-python-shell --break-system-packages --root-user-action=ignore
+    next_step
     wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+    next_step
     sudo -E env PATH="$PATH" python3 raspi-blinka.py <<< "n"
+    next_step
     pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
+    next_step
     success "GPS installed successfully"
 
     # IMU
     inform "Installing ICM20948 IMU"
     cd /home/"$user"/ || exit
     git clone https://github.com/pimoroni/icm20948-python
+    next_step
     mv /home/"$user"/auto_install.exp /home/"$user"/icm20948-python/auto_install.exp
     cd /home/"$user"/icm20948-python || exit
     chmod +x auto_install.exp
     ./auto_install.exp
+    next_step
     pip3 install icm20948 --break-system-packages --root-user-action=ignore
+    next_step
     success "ICM20948 IMU installed successfully"
 
     # DB
@@ -94,8 +116,10 @@ main() {
         inform "Database already exists, replacing it"
         rm /home/"$user"/sys.db
     fi
+    next_step
     touch /home/"$user"/sys.db
     sqlite3 /home/"$user"/sys.db < config.sql
+    next_step
     success "Database initialized successfully"
 
     # Configuration of cron
@@ -104,19 +128,23 @@ main() {
     touch /tmp/cron_config
     crontab -u "$user" -l > /tmp/cron_config
     echo "@reboot python3 /home/$user/interface.py" >> /tmp/cron_config
+    next_step
     crontab -u "$user" /tmp/cron_config
     rm /tmp/cron_config
     echo "Current cron configuration for $user:"
     crontab -u "$user" -l
+    next_step
     success "cron configured successfully"
 
     # Cleanup
     cd /home/"$user"/ || exit
     apt -y autoremove
+    next_step
     rm /home/"$user"/config.sql
     rm /home/"$user"/config.sh
     rm /home/"$user"/raspi-blinka.py
     rm /home/"$user"/icm20948-python/auto_install.exp
+    next_step
     success "Configuration script completed at $(date +%Y-%m-%d_%H:%M:%S)"
     inform "The Raspberry will reboot now"
 }
@@ -125,8 +153,8 @@ user_check
 
 inform "Installing progress bar script"
 curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/proper-installation-project/progress_bar.sh
-progress "Progress bar script installed successfully"
+success "Progress bar script installed successfully"
 source "progress_bar.sh"
 
-main > >(progress_bar::process "Configuring the Raspberry" 30) 2>&1
+main > >(progress_bar::process "Configuring the Raspberry" 29) 2>&1
 reboot
