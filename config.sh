@@ -6,7 +6,7 @@ cd ~ || exit
 echo "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
 
 fatal() {
-	echo -e "$(tput setaf 1) FATAL:$(tput sgr0) $1"
+	echo -e "$(tput setaf 1)FATAL:$(tput sgr0) $1"
 	exit 1
 }
 
