@@ -110,6 +110,8 @@ main() {
     info "The Raspberry will reboot now"
 }
 
+source "progress_bar.sh"
+
 user_check
-main
+main > >(progress_bar::process "Doing some stuff" 50)
 reboot
