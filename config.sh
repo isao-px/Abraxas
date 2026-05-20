@@ -43,7 +43,7 @@ apt -y install git
 cd /home/"$user"/ || exit
 git clone https://github.com/pimoroni/icm20948-python
 cd /home/"$user"/icm20948-python || exit
-./install.sh -n
+./install.sh
 pip3 install icm20948 --break-system-packages --root-user-action=ignore
 echo "ICM20948 IMU installed successfully"
 
