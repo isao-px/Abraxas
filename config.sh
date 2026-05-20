@@ -44,7 +44,7 @@ cd /home/"$user"/ || exit
 git clone https://github.com/isao-px/abraxas.git
 mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
 mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
-mv /home/"$user"/abraxas/auto_config.exp /home/"$user"/auto_config.exp
+mv /home/"$user"/abraxas/auto_install.exp /home/"$user"/auto_install.exp
 rm -rf /home/"$user"/abraxas
 echo "Code downloaded successfully"
 
@@ -65,7 +65,7 @@ echo "GPS installed successfully"
 echo "Installing ICM20948 IMU"
 cd /home/"$user"/ || exit
 git clone https://github.com/pimoroni/icm20948-python
-mv /home/"$user"/auto_config.exp /home/"$user"/icm20948-python/auto_config.exp
+mv /home/"$user"/auto_install.exp /home/"$user"/icm20948-python/auto_install.exp
 cd /home/"$user"/icm20948-python || exit
 ./auto_install.exp
 pip3 install icm20948 --break-system-packages --root-user-action=ignore
