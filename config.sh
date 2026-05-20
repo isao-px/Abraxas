@@ -1,8 +1,6 @@
 #!/bin/bash
 
 cd ~ || exit
-# touch sys.log
-# exec > sys.log 2>&1
 echo "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
 
 fatal() {
