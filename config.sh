@@ -4,7 +4,7 @@ success() {
 	echo -e "$(tput setaf 2)$1$(tput sgr0)"
 }
 
-inform() {
+info() {
 	echo -e "$(tput setaf 6)$1$(tput sgr0)"
 }
 
