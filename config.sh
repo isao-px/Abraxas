@@ -32,7 +32,6 @@ apt -y install python3-venv
 apt -y install sqlite3
 apt -y install python3-colorlog
 
-pip3 install time --break-system-packages --root-user-action=ignore
 pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
 
 # raspiconfig
