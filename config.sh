@@ -36,16 +36,6 @@ pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
 
 # raspiconfig
 
-# IMU
-echo "Installing ICM20948 IMU"
-apt -y install git
-cd /home/"$user"/ || exit
-git clone https://github.com/pimoroni/icm20948-python
-cd /home/"$user"/icm20948-python || exit
-sudo -u "$user" ./install.sh
-pip3 install icm20948 --break-system-packages --root-user-action=ignore
-echo "ICM20948 IMU installed successfully"
-
 # GPS
 echo "Installing GPS"
 cd /home/"$user"/ || exit
@@ -58,6 +48,16 @@ wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/m
 sudo -E env PATH="$PATH" python3 raspi-blinka.py
 pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
 echo "GPS installed successfully"
+
+# IMU
+echo "Installing ICM20948 IMU"
+apt -y install git
+cd /home/"$user"/ || exit
+git clone https://github.com/pimoroni/icm20948-python
+cd /home/"$user"/icm20948-python || exit
+sudo -u "$user" ./install.sh
+pip3 install icm20948 --break-system-packages --root-user-action=ignore
+echo "ICM20948 IMU installed successfully"
 
 # Download code
 echo "Downloading code"
