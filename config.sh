@@ -128,6 +128,5 @@ curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/proper-ins
 progress "Progress bar script installed successfully"
 source "progress_bar.sh"
 
-# main > >(progress_bar::process "Configuring the Raspberry" 30)
-main
+main > >(progress_bar::process "Configuring the Raspberry" 30) 2>&1
 reboot
