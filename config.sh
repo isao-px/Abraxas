@@ -71,7 +71,7 @@ main() {
     git clone https://github.com/pimoroni/icm20948-python
     next_step
     cd /home/"$user"/icm20948-python || exit
-    ./install.sh
+    sudo -u "$user" ./install.sh
     next_step
     pip3 install icm20948 --break-system-packages --root-user-action=ignore
     success "ICM20948 IMU installed successfully"
