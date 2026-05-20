@@ -37,6 +37,16 @@ pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
 
 # raspiconfig
 
+# Download code
+echo "Downloading code"
+cd /home/"$user"/ || exit
+git clone https://github.com/isao-px/abraxas.git
+mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
+mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
+mv /home/"$user"/abraxas/auto_config.expect /home/"$user"/auto_config.expect
+rm -rf /home/"$user"/abraxas
+echo "Code downloaded successfully"
+
 # GPS
 echo "Installing GPS"
 cd /home/"$user"/ || exit
@@ -56,18 +66,9 @@ apt -y install git
 cd /home/"$user"/ || exit
 git clone https://github.com/pimoroni/icm20948-python
 cd /home/"$user"/icm20948-python || exit
-sudo -u "$user" ./install.sh <<< $'y\nn\nn'
+./auto_install.exp
 pip3 install icm20948 --break-system-packages --root-user-action=ignore
 echo "ICM20948 IMU installed successfully"
-
-# Download code
-echo "Downloading code"
-cd /home/"$user"/ || exit
-git clone https://github.com/isao-px/abraxas.git
-mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
-mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
-rm -rf /home/"$user"/abraxas
-echo "Code downloaded successfully"
 
 # DB
 echo "Initializing database"
