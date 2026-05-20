@@ -14,7 +14,7 @@ Please pay attention to the fact that the installation shall only be conducted a
 
 To proceed with the installation, you'll need to have [Raspberry Pi OS Lite (64-bit)](https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2026-04-21/2026-04-21-raspios-trixie-arm64-lite.img.xz) working on your Raspberry. The Raspberry has to be network connected.
 
-First download the config.sh file, then make it executable and run it as root. Thw installation should start and be conducted entirely automaticaly.
+First download the config.sh file, then make it executable and run it as root. The installation should start and be conducted entirely automaticaly.
 ```
 cd
 curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/main/config.sh
