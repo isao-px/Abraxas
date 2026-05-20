@@ -31,6 +31,7 @@ apt -y install python3-full
 apt -y install python3-venv
 apt -y install sqlite3
 apt -y install python3-colorlog
+apt -y install expect
 
 pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
 
