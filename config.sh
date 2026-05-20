@@ -5,6 +5,11 @@ cd ~ || exit
 # exec > sys.log 2>&1
 echo "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
 
+fatal() {
+	echo -e "$(tput setaf 1)FATAL:$(tput sgr0) $1"
+	exit 1
+}
+
 user_check() {
 	if [ "$(id -u)" -eq 0 ]; then
 		echo "User check passed, running as $(whoami)"
