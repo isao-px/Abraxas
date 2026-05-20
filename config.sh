@@ -77,6 +77,7 @@ echo "Database initialized successfully"
 
 # Configuration of cron
 chmod +x /home/"$user"/interface.py
+touch /tmp/cron_config
 crontab -u "$user" -l > /tmp/cron_config
 "@reboot python3 /home/$user/interface.py" >> /tmp/cron_config
 crontab -u "$user" /tmp/cron
