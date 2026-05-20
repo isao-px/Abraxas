@@ -21,6 +21,7 @@ user_check
 user=$(ls /home | head -n 1)
 
 # Installations générales
+echo "Updating and installing general packages"
 apt-get update
 apt-get -y upgrade
 apt -y install tree
@@ -32,6 +33,7 @@ apt -y install sqlite3
 apt -y install python3-colorlog
 apt -y install expect
 apt -y install --upgrade python3-setuptools
+echo "General packages installed successfully"
 
 pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
 
