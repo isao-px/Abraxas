@@ -26,6 +26,7 @@ user=$(ls /home | head -n 1)
 apt-get update
 apt-get -y upgrade
 apt -y install tree
+apt -y install git
 apt -y install python3-pip
 apt -y install python3-full
 apt -y install python3-venv
@@ -36,6 +37,16 @@ apt -y install expect
 pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
 
 # raspiconfig
+
+# Download code
+echo "Downloading code"
+cd /home/"$user"/ || exit
+git clone https://github.com/isao-px/abraxas.git
+mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
+mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
+mv /home/"$user"/abraxas/auto_config.exp /home/"$user"/auto_config.exp
+rm -rf /home/"$user"/abraxas
+echo "Code downloaded successfully"
 
 # GPS
 echo "Installing GPS"
@@ -52,22 +63,13 @@ echo "GPS installed successfully"
 
 # IMU
 echo "Installing ICM20948 IMU"
-apt -y install git
 cd /home/"$user"/ || exit
 git clone https://github.com/pimoroni/icm20948-python
+mv /home/"$user"/auto_config.exp /home/"$user"/icm20948-python/auto_config.exp
 cd /home/"$user"/icm20948-python || exit
-sudo -u "$user" ./install.sh <<< $'y\nn\nn'
+./auto_install.exp
 pip3 install icm20948 --break-system-packages --root-user-action=ignore
 echo "ICM20948 IMU installed successfully"
-
-# Download code
-echo "Downloading code"
-cd /home/"$user"/ || exit
-git clone https://github.com/isao-px/abraxas.git
-mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
-mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
-rm -rf /home/"$user"/abraxas
-echo "Code downloaded successfully"
 
 # DB
 echo "Initializing database"

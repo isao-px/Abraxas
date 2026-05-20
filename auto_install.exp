@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+
+spawn sudo -u user /home/user/icm20948-python/install.sh
+
+expect "Would you like us to create and/or use a default one?*"
+send "y\r"
+
+expect "Would you like to copy examples to*"
+send "n\r"
+
+expect "Would you like to generate documentation?*"
+send "n\r"
+
+expect eof
