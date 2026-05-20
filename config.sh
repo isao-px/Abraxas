@@ -56,8 +56,8 @@ main() {
     apt -y install python3-colorlog
     next_step
 
-    pip3 install time --break-system-packages --root-user-action=ignore
-    next_step
+    # pip3 install time --break-system-packages --root-user-action=ignore
+    # next_step
     pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
     next_step
 
@@ -152,5 +152,5 @@ user_check
 curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/proper-installation-project/progress_bar.sh
 source "progress_bar.sh"
 
-main > >(progress_bar::process "Configuring the Raspberry" 31)
+main > >(progress_bar::process "Configuring the Raspberry" 30)
 reboot
