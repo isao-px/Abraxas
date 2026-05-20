@@ -19,14 +19,14 @@ fatal() {
 
 user_check() {
 	if [ "$(id -u)" -eq 0 ]; then
-		echo "User check passed, running as $(whoami)"
+		info "User check passed, running as $(whoami)"
 	else
 		fatal "Script should be running as root. Try 'sudo ./config.sh'"
 	fi
 }
 
 main() {
-    echo "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
+    info "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
 
     # Détermination de l'utilisateur
     user=$(ls /home | head -n 1)
@@ -47,17 +47,17 @@ main() {
     # raspiconfig
 
     # IMU
-    echo "Installing ICM20948 IMU"
+    info "Installing ICM20948 IMU"
     apt -y install git
     cd /home/"$user"/ || exit
     git clone https://github.com/pimoroni/icm20948-python
     cd /home/"$user"/icm20948-python || exit
     ./install.sh
     pip3 install icm20948 --break-system-packages --root-user-action=ignore
-    echo "ICM20948 IMU installed successfully"
+    success "ICM20948 IMU installed successfully"
 
     # GPS
-    echo "Installing GPS"
+    info "Installing GPS"
     cd /home/"$user"/ || exit
     apt -y install --upgrade python3-setuptools
     apt -y install python3-venv
@@ -67,19 +67,19 @@ main() {
     wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
     sudo -E venv PATH="$PATH" python3 raspi-blinka.py
     pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
-    echo "GPS installed successfully"
+    success "GPS installed successfully"
 
     # Download code
-    echo "Downloading code"
+    info "Downloading code"
     cd /home/"$user"/ || exit
     git clone https://github.com/isao-px/abraxas.git
     mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
     mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
     rm -rf /home/"$user"/abraxas
-    echo "Code downloaded successfully"
+    success "Code downloaded successfully"
 
     # DB
-    echo "Initializing database"
+    info "Initializing database"
     cd /home/"$user"/ || exit
     if [ -f /home/"$user"/sys.db ]; then
         echo "Database already exists, replacing it"
@@ -87,10 +87,10 @@ main() {
     fi
     touch /home/"$user"/sys.db
     sqlite3 /home/"$user"/sys.db < config.sql
-    echo "Database initialized successfully"
+    success "Database initialized successfully"
 
     # Configuration of cron
-    echo "Configuring cron"
+    info "Configuring cron"
     chmod +x /home/"$user"/interface.py
     touch /tmp/cron_config
     crontab -u "$user" -l > /tmp/cron_config
@@ -99,15 +99,15 @@ main() {
     rm /tmp/cron_config
     echo "Current cron configuration for $user:"
     crontab -u "$user" -l
-    echo "cron configured successfully"
+    success "cron configured successfully"
 
     # Cleanup
     cd /home/"$user"/ || exit
     apt -y autoremove
     rm /home/"$user"/config.sql
     rm /home/"$user"/config.sh
-    echo "Configuration script completed at $(date +%Y-%m-%d_%H:%M:%S)"
-    echo "The Raspberry will reboot now"
+    success "Configuration script completed at $(date +%Y-%m-%d_%H:%M:%S)"
+    info "The Raspberry will reboot now"
 }
 
 user_check
