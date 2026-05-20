@@ -67,6 +67,7 @@ cd /home/"$user"/ || exit
 git clone https://github.com/pimoroni/icm20948-python
 mv /home/"$user"/auto_install.exp /home/"$user"/icm20948-python/auto_install.exp
 cd /home/"$user"/icm20948-python || exit
+chmod +x auto_install.exp
 ./auto_install.exp
 pip3 install icm20948 --break-system-packages --root-user-action=ignore
 echo "ICM20948 IMU installed successfully"
