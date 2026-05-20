@@ -32,8 +32,8 @@ apt -y install python3-venv
 apt -y install sqlite3
 apt -y install python3-colorlog
 
-pip3 install time --break-system-packages
-pip3 install RPi.GPIO --break-system-packages
+pip3 install time --break-system-packages --root-user-action=ignore
+pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
 
 # raspiconfig
 
@@ -44,7 +44,7 @@ cd /home/"$user"/ || exit
 git clone https://github.com/pimoroni/icm20948-python
 cd /home/"$user"/icm20948-python || exit
 ./install.sh -n
-pip3 install icm20948 --break-system-packages
+pip3 install icm20948 --break-system-packages --root-user-action=ignore
 echo "ICM20948 IMU installed successfully"
 
 # GPS
@@ -54,7 +54,7 @@ apt -y install --upgrade python3-setuptools
 apt -y install python3-venv
 python3 -m venv env --system-site-packages
 source env/bin/activate
-pip3 install --upgrade adafruit-python-shell --break-system-packages
+pip3 install --upgrade adafruit-python-shell --break-system-packages --root-user-action=ignore
 wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
 sudo -E venv PATH="$PATH" python3 raspi-blinka.py
 pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
