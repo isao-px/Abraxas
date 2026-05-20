@@ -85,8 +85,9 @@ rm /tmp/cron_config
 
 # Cleanup
 cd /home/"$user"/ || exit
+apt -y autoremove
 rm /home/"$user"/config.sql
-echo "Configuration script completed at $(date +%Y-%m-%d_%H:%M:%S)"
 rm /home/"$user"/config.sh
+echo "Configuration script completed at $(date +%Y-%m-%d_%H:%M:%S)"
 echo "The Raspberry will reboot now"
 reboot
