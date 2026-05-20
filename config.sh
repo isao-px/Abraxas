@@ -123,7 +123,9 @@ main() {
 
 user_check
 
+inform "Installing progress bar script"
 curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/proper-installation-project/progress_bar.sh
+progress "Progress bar script installed successfully"
 source "progress_bar.sh"
 
 # main > >(progress_bar::process "Configuring the Raspberry" 30)
