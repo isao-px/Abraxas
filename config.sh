@@ -1,8 +1,6 @@
 #!/bin/bash
 
 cd ~ || exit
-# touch sys.log
-# exec > sys.log 2>&1
 echo "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
 
 fatal() {
@@ -33,6 +31,7 @@ apt -y install python3-venv
 apt -y install sqlite3
 apt -y install python3-colorlog
 apt -y install expect
+apt -y install --upgrade python3-setuptools
 
 pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
 
@@ -51,8 +50,6 @@ echo "Code downloaded successfully"
 # GPS
 echo "Installing GPS"
 cd /home/"$user"/ || exit
-apt -y install --upgrade python3-setuptools
-apt -y install python3-venv
 python3 -m venv env --system-site-packages
 source env/bin/activate
 pip3 install --upgrade adafruit-python-shell --break-system-packages --root-user-action=ignore
