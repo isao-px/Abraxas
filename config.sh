@@ -14,7 +14,7 @@ user_check() {
 	if [ "$(id -u)" -eq 0 ]; then
 		echo "User check passed, running as $(whoami)"
 	else
-		fatal "Script should be running as root. Try 'sudo ./install.sh'\n"
+		fatal "Script should be running as root. Try 'sudo ./config.sh'"
 	fi
 }
 user_check
