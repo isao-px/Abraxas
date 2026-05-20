@@ -150,5 +150,6 @@ user_check
 curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/proper-installation-project/progress_bar.sh
 source "progress_bar.sh"
 
-main > >(progress_bar::process "Configuring the Raspberry" 30)
+# main > >(progress_bar::process "Configuring the Raspberry" 30)
+main
 reboot
