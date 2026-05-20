@@ -4,7 +4,7 @@ success() {
 	echo -e "$(tput setaf 2)$1$(tput sgr0)"
 }
 
-info() {
+inform() {
 	echo -e "$(tput setaf 6)$1$(tput sgr0)"
 }
 
@@ -19,7 +19,7 @@ fatal() {
 
 user_check() {
 	if [ "$(id -u)" -eq 0 ]; then
-		info "User check passed, running as $(whoami)"
+		inform "User check passed, running as $(whoami)"
 	else
 		fatal "Script should be running as root. Try 'sudo ./config.sh'"
 	fi
@@ -32,117 +32,93 @@ next_step() {
 }
 
 main() {
-    info "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
+    inform "Starting configuration script at $(date +%Y-%m-%d_%H:%M:%S)"
 
     # Détermination de l'utilisateur
     user=$(ls /home | head -n 1)
-    next_step
 
     # Installations générales
+    inform "Updating and installing packages"
     apt-get update
-    next_step
     apt-get -y upgrade
-    next_step
     apt -y install tree
-    next_step
+    apt -y install git
     apt -y install python3-pip
-    next_step
     apt -y install python3-full
-    next_step
     apt -y install python3-venv
-    next_step
     apt -y install sqlite3
-    next_step
     apt -y install python3-colorlog
-    next_step
+    apt -y install expect
+    success "General packages installed successfully"
 
     pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
-    next_step
-
-    # raspiconfig
-
-    # IMU
-    info "Installing ICM20948 IMU"
-    apt -y install git
-    next_step
-    cd /home/"$user"/ || exit
-    git clone https://github.com/pimoroni/icm20948-python
-    next_step
-    cd /home/"$user"/icm20948-python || exit
-    sudo -u "$user" ./install.sh
-    next_step
-    pip3 install icm20948 --break-system-packages --root-user-action=ignore
-    success "ICM20948 IMU installed successfully"
-    next_step
-
-    # GPS
-    info "Installing GPS"
-    cd /home/"$user"/ || exit
-    apt -y install --upgrade python3-setuptools
-    next_step
-    apt -y install python3-venv
-    next_step
-    python3 -m venv env --system-site-packages
-    source env/bin/activate
-    next_step
-    pip3 install --upgrade adafruit-python-shell --break-system-packages --root-user-action=ignore
-    next_step
-    wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
-    sudo -E env PATH="$PATH" python3 raspi-blinka.py
-    next_step
-    pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
-    success "GPS installed successfully"
-    next_step
 
     # Download code
-    info "Downloading code"
+    inform "Downloading code"
     cd /home/"$user"/ || exit
     git clone https://github.com/isao-px/abraxas.git
-    next_step
     mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
     mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
-    next_step
+    mv /home/"$user"/abraxas/auto_install.exp /home/"$user"/auto_install.exp
     rm -rf /home/"$user"/abraxas
     success "Code downloaded successfully"
-    next_step
+
+    # GPS
+    inform "Installing GPS"
+    cd /home/"$user"/ || exit
+    apt -y install --upgrade python3-setuptools
+    apt -y install python3-venv
+    python3 -m venv env --system-site-packages
+    source env/bin/activate
+    pip3 install --upgrade adafruit-python-shell --break-system-packages --root-user-action=ignore
+    wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+    sudo -E env PATH="$PATH" python3 raspi-blinka.py <<< "n"
+    pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
+    success "GPS installed successfully"
+
+    # IMU
+    inform "Installing ICM20948 IMU"
+    cd /home/"$user"/ || exit
+    git clone https://github.com/pimoroni/icm20948-python
+    mv /home/"$user"/auto_install.exp /home/"$user"/icm20948-python/auto_install.exp
+    cd /home/"$user"/icm20948-python || exit
+    chmod +x auto_install.exp
+    ./auto_install.exp
+    pip3 install icm20948 --break-system-packages --root-user-action=ignore
+    success "ICM20948 IMU installed successfully"
 
     # DB
-    info "Initializing database"
+    inform "Initializing database"
     cd /home/"$user"/ || exit
     if [ -f /home/"$user"/sys.db ]; then
-        echo "Database already exists, replacing it"
+        inform "Database already exists, replacing it"
         rm /home/"$user"/sys.db
     fi
     touch /home/"$user"/sys.db
-    next_step
     sqlite3 /home/"$user"/sys.db < config.sql
     success "Database initialized successfully"
-    next_step
 
     # Configuration of cron
-    info "Configuring cron"
+    inform "Configuring cron"
     chmod +x /home/"$user"/interface.py
-    next_step
     touch /tmp/cron_config
     crontab -u "$user" -l > /tmp/cron_config
     echo "@reboot python3 /home/$user/interface.py" >> /tmp/cron_config
-    next_step
     crontab -u "$user" /tmp/cron_config
     rm /tmp/cron_config
     echo "Current cron configuration for $user:"
     crontab -u "$user" -l
     success "cron configured successfully"
-    next_step
 
     # Cleanup
     cd /home/"$user"/ || exit
     apt -y autoremove
-    next_step
     rm /home/"$user"/config.sql
     rm /home/"$user"/config.sh
+    rm /home/"$user"/raspi-blinka.py
+    rm /home/"$user"/icm20948-python/auto_install.exp
     success "Configuration script completed at $(date +%Y-%m-%d_%H:%M:%S)"
-    info "The Raspberry will reboot now"
-    next_step
+    inform "The Raspberry will reboot now"
 }
 
 user_check
