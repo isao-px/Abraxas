@@ -56,8 +56,6 @@ main() {
     apt -y install python3-colorlog
     next_step
 
-    # pip3 install time --break-system-packages --root-user-action=ignore
-    # next_step
     pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
     next_step
 
