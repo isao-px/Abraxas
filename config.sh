@@ -45,7 +45,7 @@ python3 -m venv env --system-site-packages
 source env/bin/activate
 pip3 install --upgrade adafruit-python-shell --break-system-packages --root-user-action=ignore
 wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
-sudo -E env PATH="$PATH" python3 raspi-blinka.py
+sudo -E env PATH="$PATH" python3 raspi-blinka.py <<< "n"
 pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
 echo "GPS installed successfully"
 
@@ -55,7 +55,9 @@ apt -y install git
 cd /home/"$user"/ || exit
 git clone https://github.com/pimoroni/icm20948-python
 cd /home/"$user"/icm20948-python || exit
-sudo -u "$user" ./install.sh
+sudo -u "$user" ./install.sh <<< "y"
+"n"
+"n"
 pip3 install icm20948 --break-system-packages --root-user-action=ignore
 echo "ICM20948 IMU installed successfully"
 
