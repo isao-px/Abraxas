@@ -67,12 +67,12 @@ echo "Code downloaded successfully"
 # DB
 echo "Initializing database"
 cd /home/"$user"/ || exit
-if [ ! -f /home/"$user"/sys.db ]; then
-    touch /home/"$user"/sys.db
-    sqlite3 /home/"$user"/sys.db < config.sql
-else
-    echo "Database already exists"
+if [ -f /home/"$user"/sys.db ]; then
+    echo "Database already exists, replacing it"
+    rm /home/"$user"/sys.db
 fi
+touch /home/"$user"/sys.db
+sqlite3 /home/"$user"/sys.db < config.sql
 echo "Database initialized successfully"
 
 # Configuration of cron
