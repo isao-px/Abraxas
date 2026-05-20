@@ -100,6 +100,8 @@ cd /home/"$user"/ || exit
 apt -y autoremove
 rm /home/"$user"/config.sql
 rm /home/"$user"/config.sh
+rm /home/"$user"/raspi-blinka.py
+rm /home/"$user"/icm20948-python/auto_install.exp
 echo "Configuration script completed at $(date +%Y-%m-%d_%H:%M:%S)"
 echo "The Raspberry will reboot now"
 reboot
