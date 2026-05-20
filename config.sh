@@ -147,9 +147,10 @@ main() {
     next_step
 }
 
+user_check
+
 curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/proper-installation-project/progress_bar.sh
 source "progress_bar.sh"
 
-user_check
 main > >(progress_bar::process "Configuring the Raspberry" 31)
 reboot
