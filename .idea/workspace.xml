@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="74df044a-7c29-4ac0-a194-f1a37b966b17" name="Changes" comment="Adding milestones in script&#10;And fix a typo in line 156&#10;Also modified the max of the progress bar to match the number of milestones" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotChats">
+    <option name="panelChat">
+      <chat>
+        <option name="activeSessionId" value="f71a2812-4831-4833-93d0-f00c7d1584f9" />
+        <option name="sessions">
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="d24e7bf9-8aeb-414c-92ee-8b7f6f101db1" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="status" value="Completed" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="503acff5-a5d2-4150-af0e-f6f53015b304" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="dbc886f2-9433-429f-8871-43e0e911558e" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="78bcffbf-e98d-4448-9864-a1351cdf082c" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="status" value="Completed" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="f71a2812-4831-4833-93d0-f00c7d1584f9" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="status" value="Completed" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+        </option>
+        <option name="type" value="PANEL" />
+      </chat>
+    </option>
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/isao/Documents/GitHub/Abraxas" value="3DWg3v42sWfW7x9Ha5ssquvbRhc" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="agent-panel" value="Auto" />
+      <entry key="chat-panel" value="Auto" />
+    </selectedModels>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="proper-installation-project" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {}
+}]]></component>
+  <component name="GitHubPullRequestState"><![CDATA[{
+  "prStates": [
+    {
+      "id": {
+        "id": "PR_kwDOSZRBtM7a2jgn",
+        "number": 2
+      },
+      "lastSeen": 1779312354096
+    },
+    {
+      "id": {
+        "id": "PR_kwDOSZRBtM7dtAmH",
+        "number": 10
+      },
+      "lastSeen": 1779312369406
+    }
+  ]
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/isao-px/Abraxas.git",
+    "accountId": "a37c264d-47b8-409d-be9b-61e53f183dcc"
+  },
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
+    },
+    "owner": "isao-px",
+    "repository": "Abraxas"
+  }
+}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="3DWg3v42sWfW7x9Ha5ssquvbRhc" />
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Ask" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="LOCAL" />
+      </template>
+    </option>
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "C:\\Users\\isao\\AppData\\Roaming\\JetBrains\\PyCharm2025.1\\plugins\\Shell Script\\shellcheck.exe",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="config.sh" type="ShConfigurationType" temporary="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/config.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="powershell.exe" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Shell Script.config.sh" />
+        <item itemvalue="Shell Script.config.sh" />
+        <item itemvalue="Shell Script.config.sh" />
+        <item itemvalue="Shell Script.config.sh" />
+        <item itemvalue="Shell Script.config.sh" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-PY-261.23567.174" />
+        <option value="bundled-python-sdk-024ed6589d45-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.23567.174" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="74df044a-7c29-4ac0-a194-f1a37b966b17" name="Changes" comment="" />
+      <created>1778403046366</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1778403046366</updated>
+      <workItem from="1778403047614" duration="1292000" />
+      <workItem from="1778404419047" duration="11305000" />
+      <workItem from="1778608253755" duration="5761000" />
+      <workItem from="1778664300823" duration="2776000" />
+      <workItem from="1778667675398" duration="1915000" />
+      <workItem from="1779259701067" duration="25648000" />
+    </task>
+    <task id="LOCAL-00030" summary="Refactor database initialization logic to replace existing database if present">
+      <option name="closed" value="true" />
+      <created>1779262157581</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1779262157581</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Adding error management">
+      <option name="closed" value="true" />
+      <created>1779262712434</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1779262712434</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Adding error management">
+      <option name="closed" value="true" />
+      <created>1779262791392</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1779262791392</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Correcting error management">
+      <option name="closed" value="true" />
+      <created>1779262930385</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1779262930385</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Trashing error management">
+      <option name="closed" value="true" />
+      <created>1779263067569</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1779263067569</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Reintroducing error management">
+      <option name="closed" value="true" />
+      <created>1779263127153</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1779263127153</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Amending error management">
+      <option name="closed" value="true" />
+      <created>1779263519158</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1779263519158</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Amending error management">
+      <option name="closed" value="true" />
+      <created>1779263555159</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1779263555159</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Suppressing unnecessary warning&#10;pip3 raise a warning when running as root, added an option so it was ignored">
+      <option name="closed" value="true" />
+      <created>1779264036266</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1779264036266</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Add logging in cron config">
+      <option name="closed" value="true" />
+      <created>1779264182130</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1779264182130</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Remove unrecognised option">
+      <option name="closed" value="true" />
+      <created>1779264494218</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1779264494218</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Add a progress_bar tool">
+      <option name="closed" value="true" />
+      <created>1779267643190</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1779267643190</updated>
+    </task>
+    <task id="LOCAL-00042" summary="First cleanup">
+      <option name="closed" value="true" />
+      <created>1779267701569</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1779267701569</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Putting the code in a main func">
+      <option name="closed" value="true" />
+      <created>1779267826097</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1779267826097</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Putting the code in a main func">
+      <option name="closed" value="true" />
+      <created>1779267947933</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1779267947933</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Adding some logging func">
+      <option name="closed" value="true" />
+      <created>1779268325628</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1779268325628</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Refactor logging in configuration script&#10;Using info and success functions">
+      <option name="closed" value="true" />
+      <created>1779268520424</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1779268520424</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Sourcing the file to the progress bar tool&#10;Editing the main func call">
+      <option name="closed" value="true" />
+      <created>1779268750644</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1779268750644</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Add progress tracking to configuration script">
+      <option name="closed" value="true" />
+      <created>1779271331345</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1779271331345</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Add progress tracking to configuration script">
+      <option name="closed" value="true" />
+      <created>1779271405455</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1779271405455</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Downloading progress bar tool">
+      <option name="closed" value="true" />
+      <created>1779271558429</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1779271558430</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Correcting func name">
+      <option name="closed" value="true" />
+      <created>1779271744264</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1779271744264</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Protecting the progress bar tool's download">
+      <option name="closed" value="true" />
+      <created>1779271822672</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1779271822673</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Comment out the time import&#10;It should already be imported with python-full">
+      <option name="closed" value="true" />
+      <created>1779272624629</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1779272624629</updated>
+    </task>
+    <task id="LOCAL-00054" summary="running install.sh as normal user">
+      <option name="closed" value="true" />
+      <created>1779273812256</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1779273812256</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Suppressing disturbing time import">
+      <option name="closed" value="true" />
+      <created>1779273887073</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1779273887073</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Fixing typo">
+      <option name="closed" value="true" />
+      <created>1779274158828</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1779274158828</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Fixing typo">
+      <option name="closed" value="true" />
+      <created>1779274223432</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1779274223432</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Running install.sh as a normal user">
+      <option name="closed" value="true" />
+      <created>1779274248839</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1779274248839</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Deleting time import">
+      <option name="closed" value="true" />
+      <created>1779274736844</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1779274736844</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Leave out the progression bar for now">
+      <option name="closed" value="true" />
+      <created>1779274853235</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1779274853235</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Inverting GPS and IMU config&#10;So a venv will already exist as the IMU is being initialized">
+      <option name="closed" value="true" />
+      <created>1779299149706</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1779299149707</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Adding auto answer">
+      <option name="closed" value="true" />
+      <created>1779299470727</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1779299470727</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Correcting auto answer for imu config">
+      <option name="closed" value="true" />
+      <created>1779299867565</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1779299867565</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Correcting auto answer for imu config">
+      <option name="closed" value="true" />
+      <created>1779299981070</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1779299981071</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Installing expect to run install.sh (IMU)">
+      <option name="closed" value="true" />
+      <created>1779300639041</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1779300639041</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Modifying the answer system&#10;Using expect instead of a pipe">
+      <option name="closed" value="true" />
+      <created>1779301165161</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1779301165161</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Modifying the answer system&#10;Using expect instead of a pipe">
+      <option name="closed" value="true" />
+      <created>1779301439417</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1779301439417</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Correcting an error in filename">
+      <option name="closed" value="true" />
+      <created>1779301903544</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1779301903544</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Make auto_install.exp executable">
+      <option name="closed" value="true" />
+      <created>1779302215315</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1779302215315</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Finalising cleanup">
+      <option name="closed" value="true" />
+      <created>1779302726275</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1779302726275</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Minor cleanup">
+      <option name="closed" value="true" />
+      <created>1779302889588</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1779302889588</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Adding a bit of logging">
+      <option name="closed" value="true" />
+      <created>1779303010617</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1779303010617</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Adding a bit of logging">
+      <option name="closed" value="true" />
+      <created>1779303115169</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1779303115169</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Adding a bit of logging">
+      <option name="closed" value="true" />
+      <created>1779303164758</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1779303164758</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Refactor file from main with recent amelioration">
+      <option name="closed" value="true" />
+      <created>1779304251969</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1779304251969</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Adding a bit of logging">
+      <option name="closed" value="true" />
+      <created>1779304345328</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1779304345328</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Redirecting stderr to stdout &#10;Hiding disturbing messages">
+      <option name="closed" value="true" />
+      <created>1779310164361</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1779310164361</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Adding milestones in script&#10;And fix a typo in line 156&#10;Also modified the max of the progress bar to match the number of milestones">
+      <option name="closed" value="true" />
+      <created>1779310655595</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1779310655595</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add progress tracking to configuration script" />
+    <MESSAGE value="Downloading progress bar tool" />
+    <MESSAGE value="Correcting func name" />
+    <MESSAGE value="Protecting the progress bar tool's download" />
+    <MESSAGE value="Comment out the time import&#10;It should already be imported with python-full" />
+    <MESSAGE value="running install.sh as normal user" />
+    <MESSAGE value="Suppressing disturbing time import" />
+    <MESSAGE value="Fixing typo" />
+    <MESSAGE value="Running install.sh as a normal user" />
+    <MESSAGE value="Deleting time import" />
+    <MESSAGE value="Leave out the progression bar for now" />
+    <MESSAGE value="Inverting GPS and IMU config&#10;So a venv will already exist as the IMU is being initialized" />
+    <MESSAGE value="Adding auto answer" />
+    <MESSAGE value="Correcting auto answer for imu config" />
+    <MESSAGE value="Installing expect to run install.sh (IMU)" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;config.sh" />
+    <MESSAGE value="Modifying the answer system&#10;Using expect instead of a pipe" />
+    <MESSAGE value="Correcting an error in filename" />
+    <MESSAGE value="Make auto_install.exp executable" />
+    <MESSAGE value="Finalising cleanup" />
+    <MESSAGE value="Minor cleanup" />
+    <MESSAGE value="Refactor file from main with recent amelioration" />
+    <MESSAGE value="Adding a bit of logging" />
+    <MESSAGE value="Redirecting stderr to stdout &#10;Hiding disturbing messages" />
+    <MESSAGE value="Adding milestones in script&#10;And fix a typo in line 156&#10;Also modified the max of the progress bar to match the number of milestones" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding milestones in script&#10;And fix a typo in line 156&#10;Also modified the max of the progress bar to match the number of milestones" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
