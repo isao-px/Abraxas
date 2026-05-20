@@ -147,6 +147,7 @@ main() {
     next_step
 }
 
+curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/proper-installation-project/progress_bar.sh
 source "progress_bar.sh"
 
 user_check
