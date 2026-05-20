@@ -1,5 +1,17 @@
 #!/bin/bash
 
+success() {
+	echo -e "$(tput setaf 2)$1$(tput sgr0)"
+}
+
+inform() {
+	echo -e "$(tput setaf 6)$1$(tput sgr0)"
+}
+
+warning() {
+	echo -e "$(tput setaf 1)WARNING:$(tput sgr0) $1"
+}
+
 fatal() {
 	echo -e "$(tput setaf 1)FATAL:$(tput sgr0) $1"
 	exit 1
