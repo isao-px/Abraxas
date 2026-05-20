@@ -81,12 +81,16 @@ sqlite3 /home/"$user"/sys.db < config.sql
 echo "Database initialized successfully"
 
 # Configuration of cron
+echo "Configuring cron"
 chmod +x /home/"$user"/interface.py
 touch /tmp/cron_config
 crontab -u "$user" -l > /tmp/cron_config
 echo "@reboot python3 /home/$user/interface.py" >> /tmp/cron_config
 crontab -u "$user" /tmp/cron_config
 rm /tmp/cron_config
+echo "Current cron configuration for $user:"
+crontab -u "$user" -l
+echo "cron configured successfully"
 
 # Cleanup
 cd /home/"$user"/ || exit
