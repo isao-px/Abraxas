@@ -56,7 +56,7 @@ python3 -m venv env --system-site-packages
 source env/bin/activate
 pip3 install --upgrade adafruit-python-shell --break-system-packages --root-user-action=ignore
 wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
-sudo -E venv PATH="$PATH" python3 raspi-blinka.py
+sudo -E env PATH="$PATH" python3 raspi-blinka.py
 pip3 install adafruit-circuitpython-gps --break-system-packages --root-user-action=ignore
 echo "GPS installed successfully"
 
