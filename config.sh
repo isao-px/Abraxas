@@ -67,6 +67,10 @@ main() {
     next_step
     success "General packages installed successfully"
 
+    # Configuration of serial
+    sudo raspi-config nonint do_serial_cons 1
+    sudo raspi-config nonint do_serial_hw 0
+
     # Download code
     inform "Downloading code"
     cd /home/"$user"/ || exit
