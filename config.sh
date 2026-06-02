@@ -163,6 +163,8 @@ curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/main/progr
 success "Progress bar script installed successfully"
 source "progress_bar.sh"
 
-echo "This might take a few minutes"
+inform "This might take a few minutes"
 main > >(progress_bar::process "Configuring the Raspberry" 30) 2>&1
+echo
+echo
 reboot
