@@ -68,8 +68,11 @@ main() {
     success "General packages installed successfully"
 
     # Configuration of serial
+    inform "Configuring serial"
     sudo raspi-config nonint do_serial_cons 1
     sudo raspi-config nonint do_serial_hw 0
+    next_step
+    success "Serial configured successfully"
 
     # Download code
     inform "Downloading code"
@@ -160,5 +163,6 @@ curl -LO https://raw.githubusercontent.com/isao-px/Abraxas/refs/heads/main/progr
 success "Progress bar script installed successfully"
 source "progress_bar.sh"
 
-main > >(progress_bar::process "Configuring the Raspberry" 29) 2>&1
+echo "This might take a few minutes"
+main > >(progress_bar::process "Configuring the Raspberry" 30) 2>&1
 reboot
