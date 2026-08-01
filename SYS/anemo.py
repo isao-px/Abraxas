@@ -3,7 +3,7 @@ import time
 
 # Configuration du port série
 # Remplacez '/dev/ttyUSB0' par votre port si différent
-ser = serial.Serial(
+anemo = serial.Serial(
     port='/dev/ttyUSB0',
     baudrate=9600,
     parity=serial.PARITY_NONE,
@@ -13,20 +13,20 @@ ser = serial.Serial(
 )
 
 # Important : Purge les tampons d'entrée et de sortie pour éviter les données résiduelles
-ser.reset_input_buffer()
-ser.reset_output_buffer()
+anemo.reset_input_buffer()
+anemo.reset_output_buffer()
 
 # Laissez un très court instant pour la stabilisation matérielle (optionnel mais recommandé)
 time.sleep(0.1)
 
 try:
     while True:
-        if ser.in_waiting > 0:
+        if anemo.in_waiting > 0:
             # Lecture d'une ligne complète (jusqu'au caractère de retour chariot)
-            line = ser.readline().decode('utf-8').strip()
+            line = anemo.readline().decode('utf-8').strip()
             if line:
                 print(f"Donnée reçue : {line}")
 except KeyboardInterrupt:
     print("\nLecture arrêtée.")
 finally:
-    ser.close()
+    anemo.close()
