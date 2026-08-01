@@ -1,8 +1,28 @@
+#!/usr/bin/env python
+from classes import *
 import serial
 import time
+import signal
+import sqlite3
+from datetime import datetime
 
-# Configuration du port série
-# Remplacez '/dev/ttyUSB0' par votre port si différent
+# Interruption depuis master.py ou par Ctrl+C
+running = True
+def stop_handler(sig, frame):
+    global running
+    running = False
+signal.signal(signal.SIGTERM, stop_handler)
+signal.signal(signal.SIGINT, stop_handler)
+
+def acquisition():
+    line = anemo.readline().decode('utf-8').strip()
+    if line:
+        return line
+    else:
+        return False
+
+sys_data_base = SysDataBase(__file__)
+
 anemo = serial.Serial(
     port='/dev/ttyUSB0',
     baudrate=9600,
@@ -11,22 +31,42 @@ anemo = serial.Serial(
     bytesize=serial.EIGHTBITS,
     timeout=1
 )
-
-# Important : Purge les tampons d'entrée et de sortie pour éviter les données résiduelles
 anemo.reset_input_buffer()
 anemo.reset_output_buffer()
-
-# Laissez un très court instant pour la stabilisation matérielle (optionnel mais recommandé)
 time.sleep(0.1)
 
+logging.info(f"Starting")
+logging.debug(f"Saves the imu informations into {sys_data_base.db_name}")
+
 try:
-    while True:
-        if anemo.in_waiting > 0:
-            # Lecture d'une ligne complète (jusqu'au caractère de retour chariot)
-            line = anemo.readline().decode('utf-8').strip()
-            if line:
-                print(f"Donnée reçue : {line}")
-except KeyboardInterrupt:
-    print("\nLecture arrêtée.")
+    while running:
+        start = time.monotonic()
+        timestamp = datetime.now().isoformat()
+
+        anemo_data = acquisition()
+
+        if anemo_data:
+            print(anemo_data)
+            """
+            try:
+                sys_data_base.cursor.execute(
+                    "INSERT INTO anemo_data (timestamp, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (timestamp, *anemo_data, sys_data_base.session_id)
+                )
+                sys_data_base.conn.commit()
+    
+            except sqlite3.IntegrityError as e:
+                logging.error(f"Integrity error: {e}")
+            """
+
+        # Gestion de la fréquence
+        if not anemo.in_waiting > 0 and not running:
+            time.sleep(0.01)
+
+except Exception as e:
+    logging.error(f"The execution was interrupted: {e}")
+
 finally:
+    sys_data_base.terminate_database_connexion()
     anemo.close()
+    logging.info(f"{__file__} terminated")
