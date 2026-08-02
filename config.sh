@@ -116,6 +116,13 @@ main() {
     next_step
     success "ICM20948 IMU installed successfully"
 
+    # Anemo
+    inform "Installing Anemometer"
+    cd /home/"$user"/ || exit
+    pip3 install pyserial --break-system-packages --root-user-action=ignore
+    next_step
+    success "Anemometer installed successfully"
+
     # DB
     inform "Initializing database"
     cd /home/"$user"/ || exit
@@ -164,7 +171,7 @@ success "Progress bar script installed successfully"
 source "progress_bar.sh"
 
 inform "This might take a few minutes"
-main > >(progress_bar::process "Configuring the Raspberry" 30) 2>&1
+main > >(progress_bar::process "Configuring the Raspberry" 31) 2>&1
 echo
 echo
 reboot
