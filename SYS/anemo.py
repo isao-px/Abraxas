@@ -29,7 +29,7 @@ def acquisition():
                 elif i == ",":
                     arg += 1
             try:
-                return float(direct), float(force)
+                return int(direct), float(force)
             except ValueError:
                 logging.warning(f"Received data contains non-numeric values: {line}")
                 return False
