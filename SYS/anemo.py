@@ -24,7 +24,7 @@ def acquisition():
             for i in line[7:]:
                 if i != "," and arg == 1:
                     direct += i
-                elif i != "," and arg == 4:
+                elif i != "," and arg == 3:
                     force += i
                 elif i == ",":
                     arg += 1
