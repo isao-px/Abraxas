@@ -59,24 +59,20 @@ logging.debug(f"Saves the anemo informations into {sys_data_base.db_name}")
 
 try:
     while running:
-        start = time.monotonic()
         timestamp = datetime.now().isoformat()
 
         anemo_data = acquisition()
 
         if anemo_data:
-            print(anemo_data)
-            """
             try:
                 sys_data_base.cursor.execute(
-                    "INSERT INTO anemo_data (timestamp, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO anemo_data (timestamp, direct, force, session_id) VALUES (?, ?, ?, ?)",
                     (timestamp, *anemo_data, sys_data_base.session_id)
                 )
                 sys_data_base.conn.commit()
     
             except sqlite3.IntegrityError as e:
                 logging.error(f"Integrity error: {e}")
-            """
 
         # Gestion de la fréquence
         if anemo.in_waiting == 0 and running:
