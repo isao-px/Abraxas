@@ -28,7 +28,11 @@ def acquisition():
                     force += i
                 elif i == ",":
                     arg += 1
-            return direct, force
+            try:
+                return float(direct), float(force)
+            except ValueError:
+                logging.warning(f"Received data contains non-numeric values: {line}")
+                return False
         except IndexError:
             logging.warning(f"Received data is not in the expected format: {line}")
             return False
