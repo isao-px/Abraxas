@@ -17,9 +17,24 @@ signal.signal(signal.SIGINT, stop_handler)
 def acquisition():
     line = anemo.readline().decode('utf-8').strip()
     if line:
-        return line
-    else:
-        return False
+        try:
+            direct = ""
+            force = ""
+            arg = 1
+            for i in line[7:]:
+                if i != "," and arg == 1:
+                    direct += i
+                elif i != "," and arg == 4:
+                    force += i
+                elif i == ",":
+                    arg += 1
+            return direct, force
+        except IndexError:
+            logging.warning(f"Received data is not in the expected format: {line}")
+            return False
+        except Exception as e:
+            logging.error(f"Error during data acquisition: {e}")
+            return False
 
 sys_data_base = SysDataBase(__file__)
 
@@ -36,7 +51,7 @@ anemo.reset_output_buffer()
 time.sleep(0.1)
 
 logging.info(f"Starting")
-logging.debug(f"Saves the imu informations into {sys_data_base.db_name}")
+logging.debug(f"Saves the anemo informations into {sys_data_base.db_name}")
 
 try:
     while running:
@@ -60,7 +75,7 @@ try:
             """
 
         # Gestion de la fréquence
-        if not anemo.in_waiting > 0 and not running:
+        if anemo.in_waiting == 0 and running:
             time.sleep(0.01)
 
 except Exception as e:
