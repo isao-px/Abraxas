@@ -39,7 +39,7 @@ try:
 
         try:
             sys_data_base.cursor.execute(
-                "INSERT INTO anemo_data (timestamp, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO imu_data (timestamp, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (timestamp, *imu_data, sys_data_base.session_id)
             )
             # Valider l'écriture une fois par seconde
