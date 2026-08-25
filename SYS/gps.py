@@ -8,6 +8,8 @@ import busio
 import adafruit_gps
 import serial
 import sqlite3
+import json
+import paho.mqtt.client as mqtt
 
 # Interruption par master.py ou par Ctrl+C
 running = True
