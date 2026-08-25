@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Raspberry</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background-color: #efefef;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .grid-container {
+            display: grid;
+            gap: 10px;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: white;
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+
+            /* Modification ici pour l'alignement vertical */
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .data{
+            font-size: 2em;
+        }
+
+        .title{
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .roll_line {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            width: 200%;
+            height: auto;
+            max-width: none;
+            opacity: 25%;
+
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            transform-origin: center center;
+
+            transition: transform 0.1s linear;
+        }
+
+        .pitch_line {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            width: 200%;
+            height: auto;
+            max-width: none;
+            opacity: 25%;
+
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            transform-origin: center center;
+
+            transition: transform 0.1s linear;
+        }
+
+        /* --- MODE PORTRAIT --- */
+        @media (orientation: portrait) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 1fr;
+            }
+
+            .card.square {
+                aspect-ratio: 1 / 1;
+            }
+
+            .bottom-container .card {
+                flex: 1;
+                aspect-ratio: auto;
+            }
+        }
+
+        /* --- MODE PAYSAGE --- */
+        @media (orientation: landscape) {
+            .grid-container {
+                grid-template-rows: repeat(2, 1fr);
+                grid-auto-flow: column;
+                grid-auto-columns: 1fr;
+            }
+
+            .card.square {
+                aspect-ratio: 1 / 1;
+            }
+
+            .side-container .card {
+                flex: 1;
+                aspect-ratio: auto;
+            }
+        }
+
+        .dynamic-container {
+            /* Styles de base neutres */
+        }
+
+        @media (orientation: portrait) {
+            .dynamic-container {
+                grid-column: 1 / -1;
+                display: flex;
+                gap: 10px;
+                height: 100%;
+            }
+            .dynamic-container .card {
+                flex: 1;
+                aspect-ratio: auto;
+            }
+        }
+
+        @media (orientation: landscape) {
+            .dynamic-container {
+                grid-row: 1 / -1;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+            .dynamic-container .card {
+                flex: 1;
+                aspect-ratio: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="grid-container">
+    <div style="color: #d79a02" class="card square">
+        <div class="title">TWS</div>
+        <div class="data" id="tws">--.-</div>
+        <div class="title">knt</div>
+    </div>
+
+    <div style="color: #e75b0f" class="card square">
+        <div class="title">TWA</div>
+        <div class="data" style="font-size: 2em" id="twa">--</div>
+        <div class="title">degrees</div>
+    </div>
+
+    <div style="color: #00ab55" class="card square">
+        <div class="title">SOG</div>
+        <div class="data" style="font-size: 2em" id="sog">--.-</div>
+        <div class="title">knt</div>
+    </div>
+
+    <div style="color: #0098ba" class="card square">
+        <div class="title">VMG</div>
+        <div class="data" style="font-size: 2em" id="vmg">--.-</div>
+        <div class="title">knt</div>
+    </div>
+
+    <div class="dynamic-container">
+        <div style="color: #bd1df2; position: relative; overflow: hidden" class="card">
+            <img src="pitch.png" style="z-index: 0" class="pitch_line">
+            <div></div>
+            <div style="z-index: 1000"><span style="opacity: 0.7">Pitch : </span><span id="pitch">--.-</span>°</div>
+            <div></div>
+        </div>
+
+        <div style="color: #f0188b; position: relative; overflow: hidden" class="card">
+            <img src="roll.png" style="z-index: 0" class="roll_line">
+            <div></div>
+            <div style="z-index: 1000"><span style="opacity: 0.7">Roll : </span><span id="roll">--.-</span>°</div>
+            <div></div>
+        </div>
+    </div>
+</div>
+<div  style="justify-content: right; position: absolute"><p style="margin-top: -1.3em; margin-left: 20px" id="status"></p></div>
+
+<!-- Importation de la librairie client Socket.io (servie automatiquement par le serveur) -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    // 1. Se connecter au serveur WebSocket
+    const socket = io();
+
+    // 2. Écouter l'événement de connexion réussie
+    socket.on('connect', () => {
+        document.getElementById('status').innerText = 'Connecté';
+        document.getElementById('status').style.color = '#efefef';
+    });
+
+    // 3. Écouter les mises à jour de données envoyées par le serveur
+    socket.on('update-data', (data) => {
+        const aws = data.aws_tr;
+        const awa = data.awa_tr * (Math.PI / 180); // Convertir en radians
+        const sog = data.sog_tr;
+        const cog = data.cog_tr * (Math.PI / 180); // Convertir en radians
+        const pitch = (parseFloat(data.pitch_tr) * 90 + 90).toFixed(1); // Convertir grade en degrés et mettre à zéro
+        const roll = (data.roll_tr * 90).toFixed(1); // Convertir grade en degrés
+
+        // 4. Calculer TWS, TWA et VMG
+        const tw_x = aws * Math.sin(cog + awa) + sog * Math.sin(cog);
+        const tw_y = aws * Math.cos(cog + awa) + sog * Math.cos(cog);
+        const tws = Math.sqrt(tw_x * tw_x + tw_y * tw_y);
+        const twd = Math.atan(tw_x / tw_y);
+        const twa = cog - twd;
+        const vmg = sog * Math.cos(twa);
+
+        // 5. Mise à jour du DOM sans recharger la page
+        document.getElementById('tws').innerText = isNaN(parseFloat(tws)) ? "--.-" : (tws).toFixed(1);
+        document.getElementById('twa').innerText = isNaN(parseFloat(twa * (180 / Math.PI))) ? "--.-" : (twa * (180 / Math.PI)).toFixed(0); // Convertir en degrés
+        document.getElementById('sog').innerText = isNaN(parseFloat(sog)) ? "--.-" : sog;
+        document.getElementById('vmg').innerText = isNaN(parseFloat(vmg)) ? "--.-" : (vmg).toFixed(1);
+        document.getElementById('pitch').innerText = isNaN(parseFloat(pitch)) ? "--.-" : pitch;
+        document.getElementById('roll').innerText = isNaN(parseFloat(roll)) ? "--.-" : roll;
+
+        const rollLine = document.querySelector('.roll_line');
+        rollLine.style.transform = `translate(-50%, -50%) rotate(${-roll}deg)`;
+
+        const pitchLine = document.querySelector('.pitch_line');
+        pitchLine.style.transform = `translate(-50%, ${-50 - pitch}%) rotate(0deg)`;
+    });
+
+    // 6. Gérer la déconnexion
+    socket.on('disconnect', () => {
+        document.getElementById('status').innerText = 'Déconnecté';
+        document.getElementById('status').style.color = 'red';
+
+        document.getElementById('tws').innerText = '--.-';
+        document.getElementById('twa').innerText = '---';
+        document.getElementById('sog').innerText = '--.-';
+        document.getElementById('vmg').innerText = '--.-';
+        document.getElementById('pitch').innerText = '--.-';
+        document.getElementById('roll').innerText = '--.-';
+
+        const rollLine = document.querySelector('.roll_line');
+        rollLine.style.transform = `translate(-50%, 0) rotate(0deg)`;
+
+        const pitchLine = document.querySelector('.pitch_line');
+        pitchLine.style.transform = `translate(-50%, 0) rotate(0deg)`;
+    });
+</script>
+</body>
+
+</html>
