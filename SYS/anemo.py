@@ -90,6 +90,15 @@ try:
             except sqlite3.IntegrityError as e:
                 logging.error(f"Integrity error: {e}")
 
+            try:
+                message = json.dumps({
+                    "awa_tr": anemo_data[0],
+                    "aws_tr": anemo_data[1]
+                })
+                client.publish(TOPIC, message, retain=True)
+            except Exception as e:
+                logging.warning(f"MQTT transfert error : {e}")
+
         # Gestion de la fréquence
         if anemo.in_waiting == 0 and running:
             time.sleep(0.01)
