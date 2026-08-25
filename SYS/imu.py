@@ -3,6 +3,8 @@ from classes import *
 import time
 import signal
 import sqlite3
+import json
+import paho.mqtt.client as mqtt
 from datetime import datetime
 from icm20948 import ICM20948
 
