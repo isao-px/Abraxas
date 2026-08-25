@@ -20,18 +20,18 @@ def acquisition():
     line = anemo.readline().decode('utf-8').strip()
     if line:
         try:
-            direct = ""
-            force = ""
+            awa = ""
+            aws = ""
             arg = 1
             for i in line[7:]:
                 if i != "," and arg == 1:
-                    direct += i
+                    awa += i
                 elif i != "," and arg == 3:
-                    force += i
+                    aws += i
                 elif i == ",":
                     arg += 1
             try:
-                return int(direct), float(force)
+                return int(awa), float(aws)
             except ValueError:
                 logging.warning(f"Received data contains non-numeric values: {line}")
                 return False
@@ -82,7 +82,7 @@ try:
         if anemo_data:
             try:
                 sys_data_base.cursor.execute(
-                    "INSERT INTO anemo_data (timestamp, direct, force, session_id) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO anemo_data (timestamp, awa, aws, session_id) VALUES (?, ?, ?, ?)",
                     (timestamp, *anemo_data, sys_data_base.session_id)
                 )
                 sys_data_base.conn.commit()
