@@ -42,6 +42,20 @@ def acquisition():
             logging.error(f"Error during data acquisition: {e}")
             return False
 
+# MQTT
+BROKER_ADDRESS = "localhost"
+TOPIC = "capteur/anemo"
+CLIENT_ID = __file__
+def on_connect(client, userdata, flags, rc):
+    logging.debug(f"Connected to MQTT broker : {rc}")
+client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
+client.on_connect = on_connect
+try:
+    client.connect(BROKER_ADDRESS)
+    logging.debug(f"MQTT connexion successfuly established")
+except Exception as e:
+    logging.error(f"MQTT connexion failed : {e}")
+
 sys_data_base = SysDataBase(__file__)
 
 anemo = serial.Serial(
