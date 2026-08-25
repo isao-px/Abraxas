@@ -21,6 +21,20 @@ def acquisition():
     accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z = imu.read_accelerometer_gyro_data()
     return mag_x, mag_y, mag_z, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z
 
+# MQTT
+BROKER_ADDRESS = "localhost"
+TOPIC = "capteur/imu"
+CLIENT_ID = __file__
+def on_connect(client, userdata, flags, rc):
+    logging.debug(f"Connected to MQTT broker : {rc}")
+client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
+client.on_connect = on_connect
+try:
+    client.connect(BROKER_ADDRESS)
+    logging.debug(f"MQTT connexion successfuly established")
+except Exception as e:
+    logging.error(f"MQTT connexion failed : {e}")
+
 sys_data_base = SysDataBase(__file__)
 
 imu = ICM20948()
