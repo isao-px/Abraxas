@@ -66,6 +66,15 @@ try:
         except sqlite3.IntegrityError as e:
             logging.error(f"Integrity error: {e}")
 
+        try:
+            message = json.dumps({
+                "pitch_tr": imu_data[4],
+                "roll_tr": imu_data[3]
+            })
+            client.publish(TOPIC, message, retain=True)
+        except Exception as e:
+            logging.warning(f"MQTT transfert error : {e}")
+
         # Gestion de la fréquence
         remaining = period - (time.monotonic() - start)
         if remaining > 0 and running:
