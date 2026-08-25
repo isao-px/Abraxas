@@ -214,8 +214,8 @@
         const awa = data.awa_tr * (Math.PI / 180); // Convertir en radians
         const sog = data.sog_tr;
         const cog = data.cog_tr * (Math.PI / 180); // Convertir en radians
-        const pitch = (parseFloat(data.pitch_tr) * 90 + 90).toFixed(1); // Convertir grade en degrés et mettre à zéro
-        const roll = (data.roll_tr * 90).toFixed(1); // Convertir grade en degrés
+        const pitch = parseFloat(data.pitch_tr) * 90 + 90; // Convertir grade en degrés et mettre à zéro
+        const roll = data.roll_tr * 90; // Convertir grade en degrés
 
         // 4. Calculer TWS, TWA et VMG
         const tw_x = aws * Math.sin(cog + awa) + sog * Math.sin(cog);
