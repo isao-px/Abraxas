@@ -214,8 +214,8 @@
         const awa = data.awa_tr * (Math.PI / 180); // Convertir en radians
         const sog = data.sog_tr;
         const cog = data.cog_tr * (Math.PI / 180); // Convertir en radians
-        const pitch = parseFloat(data.pitch_tr) * 90 + 90; // Convertir grade en degrés et mettre à zéro
-        const roll = data.roll_tr * 90; // Convertir grade en degrés
+        const pitch = (parseFloat(data.pitch_tr) * 90 + 90).toFixed(1); // Convertir grade en degrés et mettre à zéro
+        const roll = (data.roll_tr * 90).toFixed(1); // Convertir grade en degrés
 
         // 4. Calculer TWS, TWA et VMG
         const tw_x = aws * Math.sin(cog + awa) + sog * Math.sin(cog);
@@ -225,27 +225,19 @@
         const twa = cog - twd;
         const vmg = sog * Math.cos(twa);
 
-        // 5. Lissage des valeurs avec EMA
-        let ema_tws = ema_tws ? 0.1 * tws + 0.9 * ema_tws : tws;
-        let ema_twa = ema_twa ? 0.1 * twa + 0.9 * ema_twa : twa;
-        let ema_sog = ema_sog ? 0.1 * sog + 0.9 * ema_sog : sog;
-        let ema_vmg = ema_vmg ? 0.1 * vmg + 0.9 * ema_vmg : vmg;
-        let ema_pitch = ema_pitch ? 0.1 * pitch + 0.9 * ema_pitch : pitch;
-        let ema_roll = ema_roll ? 0.1 * roll + 0.9 * ema_roll : roll;
-
-        // 6. Mise à jour du DOM sans recharger la page
-        document.getElementById('tws').innerText = isNaN(parseFloat(ema_tws)) ? "--.-" : (ema_tws).toFixed(1);
-        document.getElementById('twa').innerText = isNaN(parseFloat(ema_twa * (180 / Math.PI))) ? "--.-" : (ema_twa * (180 / Math.PI)).toFixed(0); // Convertir en degrés
-        document.getElementById('sog').innerText = isNaN(parseFloat(ema_sog)) ? "--.-" : ema_sog;
-        document.getElementById('vmg').innerText = isNaN(parseFloat(ema_vmg)) ? "--.-" : (ema_vmg).toFixed(1);
-        document.getElementById('pitch').innerText = isNaN(parseFloat(ema_pitch)) ? "--.-" : (ema_pitch).toFixed(1);
-        document.getElementById('roll').innerText = isNaN(parseFloat(ema_roll)) ? "--.-" : (ema_roll).toFixed(1);
+        // 5. Mise à jour du DOM sans recharger la page
+        document.getElementById('tws').innerText = isNaN(parseFloat(tws)) ? "--.-" : (tws).toFixed(1);
+        document.getElementById('twa').innerText = isNaN(parseFloat(twa * (180 / Math.PI))) ? "--.-" : (twa * (180 / Math.PI)).toFixed(0); // Convertir en degrés
+        document.getElementById('sog').innerText = isNaN(parseFloat(sog)) ? "--.-" : sog;
+        document.getElementById('vmg').innerText = isNaN(parseFloat(vmg)) ? "--.-" : (vmg).toFixed(1);
+        document.getElementById('pitch').innerText = isNaN(parseFloat(pitch)) ? "--.-" : pitch;
+        document.getElementById('roll').innerText = isNaN(parseFloat(roll)) ? "--.-" : roll;
 
         const rollLine = document.querySelector('.roll_line');
-        rollLine.style.transform = `translate(-50%, -50%) rotate(${-ema_roll}deg)`;
+        rollLine.style.transform = `translate(-50%, -50%) rotate(${-roll}deg)`;
 
         const pitchLine = document.querySelector('.pitch_line');
-        pitchLine.style.transform = `translate(-50%, ${-50 - ema_pitch}%) rotate(0deg)`;
+        pitchLine.style.transform = `translate(-50%, ${-50 - pitch}%) rotate(0deg)`;
     });
 
     // 6. Gérer la déconnexion
