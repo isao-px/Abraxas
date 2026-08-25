@@ -100,6 +100,15 @@ try:
         except sqlite3.IntegrityError as e:
             logging.warning(f"Integrity error: {e}")
 
+        try:
+            message = json.dumps({
+                "sog_tr": gps_data[8],
+                "cog_tr": gps_data[10]
+            })
+            client.publish(TOPIC, message, retain=True)
+        except Exception as e:
+            logging.warning(f"MQTT transfert error : {e}")
+
         # Gestion de la fréquence
         remaining = period - (time.monotonic() - start)
         if remaining > 0 and running:
