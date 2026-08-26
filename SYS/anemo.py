@@ -43,7 +43,7 @@ def acquisition():
 
 # MQTT
 BROKER_ADDRESS = "localhost"
-TOPIC = "capteur/anemo"
+TOPIC_PREFIX = "capteur/anemo"
 CLIENT_ID = __file__
 def on_connect(client, userdata, flags, rc):
     logging.debug(f"Connected to MQTT broker : {rc}")
@@ -90,11 +90,8 @@ try:
                 logging.error(f"Integrity error: {e}")
 
             try:
-                message = json.dumps({
-                    "awa_tr": anemo_data[0],
-                    "aws_tr": anemo_data[1]
-                })
-                client.publish(TOPIC, message, retain=True)
+                client.publish(f"{TOPIC_PREFIX}/awa", str(anemo_data[0]), retain=True)
+                client.publish(f"{TOPIC_PREFIX}/aws", str(anemo_data[1]), retain=True)
             except Exception as e:
                 logging.warning(f"MQTT transfert error : {e}")
 
