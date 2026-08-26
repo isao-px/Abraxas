@@ -23,7 +23,7 @@ def acquisition():
 
 # MQTT
 BROKER_ADDRESS = "localhost"
-TOPIC = "capteur/imu"
+TOPIC_PREFIX = "capteur/imu"
 CLIENT_ID = __file__
 def on_connect(client, userdata, flags, rc):
     logging.debug(f"Connected to MQTT broker : {rc}")
@@ -67,11 +67,8 @@ try:
             logging.error(f"Integrity error: {e}")
 
         try:
-            message = json.dumps({
-                "pitch_tr": imu_data[4],
-                "roll_tr": imu_data[3]
-            })
-            client.publish(TOPIC, message, retain=True)
+            client.publish(f"{TOPIC_PREFIX}/pitch", str(imu_data[4]), retain=True)
+            client.publish(f"{TOPIC_PREFIX}/roll", str(imu_data[3]), retain=True)
         except Exception as e:
             logging.warning(f"MQTT transfert error : {e}")
 
