@@ -38,14 +38,20 @@ clientMqtt.on('connect', () => {
 });
 
 clientMqtt.on('message', (topic, buffer) => {
-    const message = buffer.toString();
-    try {
-        const data = JSON.parse(message);
-        io.emit('update-data', data);
-    } catch (error) {
-        console.error('Erreur lors du parsing JSON:', error);
-    }
-});
+    const parts = topic.split('/');
+    if (parts.length === 3) {
+        const id = parts[2];
+        const value = buffer.toString();
+        try {
+            const data = {
+                id: id,
+                value: value
+            }
+            io.emit('update-data', JSON.stringify(data));
+        } catch (error) {
+            console.error('Erreur lors du transfert :', error);
+        }
+}});
 
 // Démarrage du serveur sur le port 3000
 const PORT = 3000;
