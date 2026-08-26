@@ -12,6 +12,12 @@ const io = new Server(server);
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client.html'));
 });
+app.get('/client.css', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client.css'));
+});
+app.get('/client.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client.js'));
+});
 app.get('/roll.png', (req, res) => {
     res.sendFile(path.join(__dirname, 'roll.png'));
 });

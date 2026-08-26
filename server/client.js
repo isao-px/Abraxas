@@ -1,0 +1,59 @@
+// 1. Se connecter au serveur WebSocket
+const socket = io();
+
+// 2. Écouter l'événement de connexion réussie
+socket.on('connect', () => {
+    document.getElementById('status').innerText = 'Connecté';
+    document.getElementById('status').style.color = '#efefef';
+});
+
+// 3. Écouter les mises à jour de données envoyées par le serveur
+socket.on('update-data', (data) => {
+    const aws = data.aws_tr;
+    const awa = data.awa_tr * (Math.PI / 180); // Convertir en radians
+    const sog = data.sog_tr;
+    const cog = data.cog_tr * (Math.PI / 180); // Convertir en radians
+    const pitch = (parseFloat(data.pitch_tr) * 90 + 90).toFixed(1); // Convertir grade en degrés et mettre à zéro
+    const roll = (data.roll_tr * 90).toFixed(1); // Convertir grade en degrés
+
+    // 4. Calculer TWS, TWA et VMG
+    const tw_x = aws * Math.sin(cog + awa) + sog * Math.sin(cog);
+    const tw_y = aws * Math.cos(cog + awa) + sog * Math.cos(cog);
+    const tws = Math.sqrt(tw_x * tw_x + tw_y * tw_y);
+    const twd = Math.atan(tw_x / tw_y);
+    const twa = cog - twd;
+    const vmg = sog * Math.cos(twa);
+
+    // 5. Mise à jour du DOM sans recharger la page
+    document.getElementById('tws').innerText = isNaN(parseFloat(tws)) ? "--.-" : (tws).toFixed(1);
+    document.getElementById('twa').innerText = isNaN(parseFloat(twa * (180 / Math.PI))) ? "--.-" : (twa * (180 / Math.PI)).toFixed(0); // Convertir en degrés
+    document.getElementById('sog').innerText = isNaN(parseFloat(sog)) ? "--.-" : sog;
+    document.getElementById('vmg').innerText = isNaN(parseFloat(vmg)) ? "--.-" : (vmg).toFixed(1);
+    document.getElementById('pitch').innerText = isNaN(parseFloat(pitch)) ? "--.-" : pitch;
+    document.getElementById('roll').innerText = isNaN(parseFloat(roll)) ? "--.-" : roll;
+
+    const rollLine = document.querySelector('.roll_line');
+    rollLine.style.transform = `translate(-50%, -50%) rotate(${-roll}deg)`;
+
+    const pitchLine = document.querySelector('.pitch_line');
+    pitchLine.style.transform = `translate(-50%, ${-50 - pitch}%) rotate(0deg)`;
+});
+
+// 6. Gérer la déconnexion
+socket.on('disconnect', () => {
+    document.getElementById('status').innerText = 'Déconnecté';
+    document.getElementById('status').style.color = 'red';
+
+    document.getElementById('tws').innerText = '--.-';
+    document.getElementById('twa').innerText = '---';
+    document.getElementById('sog').innerText = '--.-';
+    document.getElementById('vmg').innerText = '--.-';
+    document.getElementById('pitch').innerText = '--.-';
+    document.getElementById('roll').innerText = '--.-';
+
+    const rollLine = document.querySelector('.roll_line');
+    rollLine.style.transform = `translate(-50%, 0) rotate(0deg)`;
+
+    const pitchLine = document.querySelector('.pitch_line');
+    pitchLine.style.transform = `translate(-50%, 0) rotate(0deg)`;
+});
