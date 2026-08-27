@@ -102,6 +102,7 @@ try:
         try:
             client.publish(f"{TOPIC_PREFIX}/sog", str(gps_data[8]), retain=True)
             client.publish(f"{TOPIC_PREFIX}/cog", str(gps_data[10]), retain=True)
+            logging.debug(f"MQTT transfert successfuly done : sog: {gps_data[8]}, cog: {gps_data[10]}")
         except Exception as e:
             logging.warning(f"MQTT transfert error : {e}")
 

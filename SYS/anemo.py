@@ -92,6 +92,7 @@ try:
             try:
                 client.publish(f"{TOPIC_PREFIX}/awa", str(anemo_data[0]), retain=True)
                 client.publish(f"{TOPIC_PREFIX}/aws", str(anemo_data[1]), retain=True)
+                logging.debug(f"MQTT transfert successfuly done : awa: {anemo_data[0]}, aws: {anemo_data[1]}")
             except Exception as e:
                 logging.warning(f"MQTT transfert error : {e}")
 
