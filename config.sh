@@ -62,6 +62,8 @@ main() {
     next_step
     apt -y install --upgrade python3-setuptools
     next_step
+    apt -y install ffmpeg
+    next_step
 
     pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
     next_step
