@@ -47,17 +47,17 @@ clientMqtt.on('message', (topic, buffer) => {
     const parts = topic.split('/');
     if (parts.length === 3) {
         const id = parts[2];
-        const value = buffer.toString();
+        const rawValue = buffer.toString();
         try {
-            const data = {
-                id: id,
-                value: value
-            }
-            io.emit('update-data', JSON.stringify(data));
+            const numeric = Number(rawValue);
+            const value = Number.isNaN(numeric) ? rawValue : numeric;
+            const data = { [id]: value };
+            io.emit('update-data', data);
         } catch (error) {
             console.error('Erreur lors du transfert :', error);
         }
-}});
+    }
+});
 
 // Démarrage du serveur sur le port 3000
 const PORT = 3000;
