@@ -141,7 +141,7 @@ main() {
     chmod +x /home/"$user"/interface.py
     touch /tmp/cron_config
     crontab -u "$user" -l > /tmp/cron_config
-    echo "@reboot python3 /home/$user/interface.py" >> /tmp/cron_config
+    echo "@reboot env/bin/python3 /home/$user/interface.py" >> /tmp/cron_config
     next_step
     crontab -u "$user" /tmp/cron_config
     rm /tmp/cron_config
