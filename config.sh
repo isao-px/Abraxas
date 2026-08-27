@@ -143,6 +143,28 @@ main() {
     next_step
     success "Database initialized successfully"
 
+	# Configuration of the server
+	cd /home/"$user"/ || exit
+	pip3 install paho-mqtt --break-system-packages --root-user-action
+	next_step
+	apt -y install mosquitto mosquitto-clients
+	next_step
+	systemctl start mosquitto
+	systemctl enable mosquitto
+	next_step
+	
+	mkdir server
+	cd server
+	next_step
+	npm init -y
+	next_step
+	npm install express socket.io
+	next_step
+	npm install mqtt
+	next_step
+	cd /home/"$user"/ || exit
+	success "Server successfully initialised"
+
     # Configuration of cron
     inform "Configuring cron"
     chmod +x /home/"$user"/interface.py
@@ -178,7 +200,7 @@ success "Progress bar script installed successfully"
 source "progress_bar.sh"
 
 inform "This might take a few minutes"
-main > >(progress_bar::process "Configuring the Raspberry" 31) 2>&1
+main > >(progress_bar::process "Configuring the Raspberry" 38) 2>&1
 echo
 echo
 reboot
