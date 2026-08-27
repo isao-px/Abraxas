@@ -62,6 +62,12 @@ main() {
     next_step
     apt -y install --upgrade python3-setuptools
     next_step
+    apt -y install ffmpeg
+    next_step
+    apt -y install nodejs
+    next_step
+    apt -y install npm
+    next_step
 
     pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
     next_step
@@ -133,15 +139,38 @@ main() {
     next_step
     touch /home/"$user"/sys.db
     sqlite3 /home/"$user"/sys.db < config.sql
+    chown user sys.db
     next_step
     success "Database initialized successfully"
+
+	# Configuration of the server
+	cd /home/"$user"/ || exit
+	pip3 install paho-mqtt --break-system-packages --root-user-action
+	next_step
+	apt -y install mosquitto mosquitto-clients
+	next_step
+	systemctl start mosquitto
+	systemctl enable mosquitto
+	next_step
+	
+	mkdir server
+	cd server
+	next_step
+	npm init -y
+	next_step
+	npm install express socket.io
+	next_step
+	npm install mqtt
+	next_step
+	cd /home/"$user"/ || exit
+	success "Server successfully initialised"
 
     # Configuration of cron
     inform "Configuring cron"
     chmod +x /home/"$user"/interface.py
     touch /tmp/cron_config
     crontab -u "$user" -l > /tmp/cron_config
-    echo "@reboot python3 /home/$user/interface.py" >> /tmp/cron_config
+    echo "@reboot env/bin/python3 /home/$user/interface.py" >> /tmp/cron_config
     next_step
     crontab -u "$user" /tmp/cron_config
     rm /tmp/cron_config
@@ -171,7 +200,7 @@ success "Progress bar script installed successfully"
 source "progress_bar.sh"
 
 inform "This might take a few minutes"
-main > >(progress_bar::process "Configuring the Raspberry" 31) 2>&1
+main > >(progress_bar::process "Configuring the Raspberry" 38) 2>&1
 echo
 echo
 reboot
