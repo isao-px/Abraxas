@@ -25,6 +25,10 @@ app.get('/pitch.png', (req, res) => {
     res.sendFile(path.join(__dirname, 'pitch.png'));
 });
 
+app.get('/data', (req, res) => {
+    res.sendFile('/home/user/sys.db'));
+});
+
 // 2. Gestion des connexions WebSocket
 io.on('connection', (socket) => {
     console.log('Un client est connecté :', socket.id);
