@@ -98,7 +98,7 @@ try:
 
         # Gestion de la fréquence
         if anemo.in_waiting == 0 and running:
-            time.sleep(0.01)
+            time.sleep(1)
 
 except Exception as e:
     logging.error(f"The execution was interrupted: {e}")
