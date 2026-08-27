@@ -86,21 +86,21 @@ sqlite> .exit
 
 
 
-source env/bin/activate
-chown user sys.db
-apt -y install ffmpeg
-sudo apt -y install nodejs
-sudo apt -y install npm
+source env/bin/activate                                                         ok
+chown user sys.db                                                               ok
+apt -y install ffmpeg                                                           ok
+sudo apt -y install nodejs                                                      ok
+sudo apt -y install npm                                                         ok
 
-sudo pip3 install paho-mqtt --break-system-packages --root-user-action
-sudo apt -y install mosquitto mosquitto-clients
-sudo systemctl start mosquitto
-sudo systemctl enable mosquitto
+sudo pip3 install paho-mqtt --break-system-packages --root-user-action          ok
+sudo apt -y install mosquitto mosquitto-clients                                 ok
+sudo systemctl start mosquitto                                                  ok
+sudo systemctl enable mosquitto                                                 ok
 
-mkdir server
-cd server
-npm init -y
-npm install express socket.io
-npm install mqtt
-cd
-node server/server.js
+mkdir server                                                                    ok
+cd server                                                                       ok
+npm init -y                                                                     ok
+npm install express socket.io                                                   ok
+npm install mqtt                                                                ok
+cd                                                                              ok
+node server/server.js                                                           ok
