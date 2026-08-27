@@ -64,6 +64,8 @@ main() {
     next_step
     apt -y install ffmpeg
     next_step
+    apt -y install nodejs
+    next_step
 
     pip3 install RPi.GPIO --break-system-packages --root-user-action=ignore
     next_step
