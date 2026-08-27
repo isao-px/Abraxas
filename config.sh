@@ -133,6 +133,7 @@ main() {
     next_step
     touch /home/"$user"/sys.db
     sqlite3 /home/"$user"/sys.db < config.sql
+    chown user sys.db
     next_step
     success "Database initialized successfully"
 
