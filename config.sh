@@ -154,7 +154,7 @@ main() {
 	next_step
 	
 	mkdir server
-	cd server
+	cd /home/"$user"/server || exit
 	next_step
 	npm init -y
 	next_step
