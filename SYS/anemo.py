@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from classes import *
 import serial
+import sys
 import time
 import signal
 import sqlite3
@@ -55,7 +56,12 @@ try:
 except Exception as e:
     logging.error(f"MQTT connexion failed : {e}")
 
-sys_data_base = SysDataBase(__file__)
+sys_data_base = False
+try:
+    session_id = sys.argv[1]
+except Exception as e:
+    sys_data_base = SysDataBase(__file__)
+    session_id = sys_data_base.session_id
 
 anemo = serial.Serial(
     port='/dev/ttyUSB0',
