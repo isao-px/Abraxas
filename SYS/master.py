@@ -46,9 +46,9 @@ try:
     logging.debug("Launching anemo.py")
     logging.debug("Launching vid.py")
     processes = [
-        subprocess.Popen(["python3", "imu.py"]),
-        subprocess.Popen(["python3", "gps.py"]),
-        subprocess.Popen(["python3", "anemo.py"]),
+        subprocess.Popen(["python3", "imu.py", str(sys_data_base.session_id)]),
+        subprocess.Popen(["python3", "gps.py", str(sys_data_base.session_id)]),
+        subprocess.Popen(["python3", "anemo.py", str(sys_data_base.session_id)]),
         subprocess.Popen(["python3", "vid.py", str(sys_data_base.session_id)]),
     ]
 except Exception as e:
