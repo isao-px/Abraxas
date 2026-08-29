@@ -28,6 +28,7 @@ def shutdown():
 s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 s.connect('/tmp/gpio_daemon.sock')
 s.send(b'SESSION:ON')
+s.close()
 
 sys_data_base = SysDataBase(__file__)
 logging.info("Starting")
@@ -93,10 +94,13 @@ if ending_session:
         sys.exit(1)
 
     logging.debug("Session properly ended")
+    s.connect('/tmp/gpio_daemon.sock')
     s.send(b'SESSION:OFF')
+    s.close()
     logging.debug("launching grp.py")
     fusion = subprocess.run(["env/bin/python3", "grp.py", str(sys_data_base.session_id)])
     logging.info(f"Master terminated for session {sys_data_base.session_id}")
+    s.connect('/tmp/gpio_daemon.sock')
     s.send(b'3:OFF')
     s.close()
     sys.exit(0)
