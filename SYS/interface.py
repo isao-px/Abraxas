@@ -8,6 +8,7 @@ import os
 import signal
 import time
 import sys
+import socket
 
 button = Button(24, pull_up=True)
 witness_button = False
@@ -27,7 +28,7 @@ logging.info("Interface is standing by, ready for a new session")
 while not witness_is_on:
     try:
         s.connect('/tmp/gpio_daemon.sock')
-        s.send(b'1:ON')
+        s.sendall(b'1:ON')
         witness_is_on = True
     except Exception as e:
         logging.warning(f"Error occurred while turning on GPIO 1: {e}")
@@ -56,6 +57,11 @@ while True:
         if session_is_running and session:
             logging.debug("Terminating ongoing session")
             session.terminate()
+        try:
+            s.sendall(b'1:OFF')
+            s.close()
+        except Exception as e:
+            logging.error(f"Failed to turn off GPIO 1: {e}")
         sys.exit(0)
     except Exception as e:
         logging.critical(f"Major failure : a critical error crashed interface.py : {e}")
@@ -65,15 +71,10 @@ while True:
             if session:
                 session.terminate()
                 logging.debug("Terminating ongoing session")
+            s.sendall(b'1:OFF')
+            s.close()
         except Exception as e:
-            logging.error("Failed to stop the ongoing session")
+            logging.error(f"Failed to stop the ongoing session and turn off GPIO 1 : {e}")
         logging.warning("Interface.py is exiting")
         emergency_reboot()
         sys.exit(1)
-
-    finally:
-        try:
-            s.send(b'1:OFF')
-        except Exception as e:
-            logging.error(f"Error occurred while turning off GPIO 1: {e}")
-        s.close()
