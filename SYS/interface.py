@@ -57,11 +57,6 @@ while True:
         if session_is_running and session:
             logging.debug("Terminating ongoing session")
             session.terminate()
-        try:
-            s.sendall(b'1:OFF')
-            s.close()
-        except Exception as e:
-            logging.error(f"Failed to turn off GPIO 1: {e}")
         sys.exit(0)
     except Exception as e:
         logging.critical(f"Major failure : a critical error crashed interface.py : {e}")
@@ -71,8 +66,6 @@ while True:
             if session:
                 session.terminate()
                 logging.debug("Terminating ongoing session")
-            s.sendall(b'1:OFF')
-            s.close()
         except Exception as e:
             logging.error(f"Failed to stop the ongoing session and turn off GPIO 1 : {e}")
         logging.warning("Interface.py is exiting")
