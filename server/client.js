@@ -16,7 +16,7 @@ function updateData() {
     displayData.twa = twa * (180 / Math.PI);
     displayData.vmg = vmg;
     displayData.sog = sensorData.sog;
-    displayData.pitch = (sensorData.pitch * 90).toFixed(1);
+    displayData.pitch = (sensorData.pitch * 90 + 90).toFixed(1);
     displayData.roll = (sensorData.roll * 90).toFixed(1);
 
     // MàJ du DOM
