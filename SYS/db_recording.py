@@ -61,7 +61,10 @@ logging.debug(f"Using session_id = {session_id}, recording data into {sys_data_b
 try:
     last_commit = time.time()
     while running:
-        item = q.get(timeout=1)
+        try:
+            item = q.get(timeout=1)
+        except queue.Empty:
+            continue
 
         # Anemo data
         if item[1] == "capteur/anemo/full":
