@@ -121,5 +121,7 @@ except Exception as e:
     logging.error(f"The execution was interrupted: {e}")
 
 finally:
-    sys_data_base.terminate_database_connexion()
+    if sys_data_base:
+        logging.debug("Closing database connection")
+        sys_data_base.conn.close()
     logging.info(f"{__file__} terminated")
