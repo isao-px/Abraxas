@@ -68,11 +68,12 @@ while True:
         except Exception as e:
             logging.error("Failed to stop the ongoing session")
         logging.warning("Interface.py is exiting")
-        gpio_controller.action('1', 'OFF')
-        gpio_controller.cleanup()
         emergency_reboot()
         sys.exit(1)
 
     finally:
-        gpio_controller.action('1', 'OFF')
+        try:
+            gpio_controller.action('1', 'OFF')
+        except Exception as e:
+            logging.error(f"Error occurred while turning off GPIO 1: {e}")
         gpio_controller.cleanup()
