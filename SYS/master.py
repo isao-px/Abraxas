@@ -6,14 +6,7 @@ import time
 import logging
 from datetime import datetime
 import signal
-import RPi.GPIO as GPIO
 
-try:
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(1, GPIO.OUT)
-    GPIO.output(1, GPIO.HIGH)
-except Exception as e:
-    logging.warning(f"Failed to setup and enable GPIO : {e}")
 ending_session = False
 
 def handle_usr1(signum, frame):
@@ -31,6 +24,10 @@ def shutdown():
             logging.warning(f"Process {proc} did not terminate in time, sending SIGKILL.")
             proc.kill()
 
+gpio_controller = GPIOController()
+gpio_controller.connect_daemon()
+gpio_controller.action('SESSION', 'ON')
+
 sys_data_base = SysDataBase(__file__)
 logging.info("Starting")
 
@@ -45,7 +42,7 @@ try:
     logging.debug(f"Session {sys_data_base.session_id} created")
 except Exception as e:
     logging.error(f"Failed to create a new session : {e}")
-    GPIO.cleanup()
+    gpio_controller.cleanup()
     sys.exit(1)
 
 try:
@@ -63,7 +60,7 @@ try:
 except Exception as e:
     logging.critical(f"Failed to launch the dependencies : {e}")
     shutdown()
-    GPIO.cleanup()
+    gpio_controller.cleanup()
     sys.exit(1)
 
 try:
@@ -72,7 +69,7 @@ try:
 except Exception as e:
     logging.critical(f"Failed to terminate the subprocesses : {e}")
     shutdown()
-    GPIO.cleanup()
+    gpio_controller.cleanup()
     sys.exit(1)
 
 if ending_session:
@@ -91,12 +88,13 @@ if ending_session:
         logging.debug(f"Session {sys_data_base.session_id} ended, connexion closed")
     except Exception as e:
         logging.error(f"Failed to properly end the session : {e}")
+        gpio_controller.cleanup()
         sys.exit(1)
 
     logging.debug("Session properly ended")
-    GPIO.output(1, GPIO.LOW)
-    GPIO.cleanup()
+    gpio_controller.action('SESSION', 'OFF')
     logging.debug("launching grp.py")
     fusion = subprocess.run(["env/bin/python3", "grp.py", str(sys_data_base.session_id)])
     logging.info(f"Master terminated for session {sys_data_base.session_id}")
+    gpio_controller.cleanup()
     sys.exit(0)
