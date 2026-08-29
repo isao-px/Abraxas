@@ -15,7 +15,6 @@ session_is_running = False
 session = None
 gpio_controller = GPIOController()
 gpio_controller.connect_daemon()
-gpio_controller.action('1', 'ON')
 
 def bouton_pressed():
     global witness_button
@@ -27,6 +26,7 @@ logging.info("Interface is standing by, ready for a new session")
 
 while True:
     try:
+        gpio_controller.action('1', 'ON')
         if witness_button:
             logging.debug("Button pressed")
             if session_is_running:
