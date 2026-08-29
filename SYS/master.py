@@ -96,5 +96,6 @@ if ending_session:
     logging.debug("launching grp.py")
     fusion = subprocess.run(["env/bin/python3", "grp.py", str(sys_data_base.session_id)])
     logging.info(f"Master terminated for session {sys_data_base.session_id}")
+    gpio_controller.action('3', 'OFF')
     gpio_controller.cleanup()
     sys.exit(0)

@@ -4,6 +4,17 @@ import subprocess
 import os
 import sys
 
+gpio_controller = GPIOController()
+gpio_controller.connect_daemon()
+
+@non_blocking
+def blink():
+    while True:
+        gpio_controller.action('3', 'TOGGLE')
+        time.sleep(1)
+
+blink()
+
 sys_data_base = False
 try:
     session_id = sys.argv[1]
@@ -59,4 +70,5 @@ finally:
         sys_data_base.conn.close()
     if os.path.exists("list.txt"):
         os.remove("list.txt")
+    gpio_controller.cleanup()
     logging.info(f"{__file__} terminated")
