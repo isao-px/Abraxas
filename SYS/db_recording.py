@@ -42,7 +42,7 @@ def on_message(client, userdata, msg):
     topic = msg.topic
     payload = msg.payload.decode('utf-8')
     logging.debug(f"Received message on topic {topic} : {payload}")
-    q.put((datetime.now().isoformat(), topic, payload))
+    q.put((datetime.now().isoformat(), topic, eval(payload)))
 
 try:
     client = mqtt.Client(client_id=CLIENT_ID)
