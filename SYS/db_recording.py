@@ -44,10 +44,10 @@ def on_message(client, userdata, msg):
     logging.debug(f"Received message on topic {topic} : {payload}")
     q.put((datetime.now().isoformat(), topic, payload))
 
-client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
-client.on_connect = on_connect
-client.on_message = on_message
 try:
+    client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
+    client.on_connect = on_connect
+    client.on_message = on_message
     client.connect(BROKER_ADDRESS)
     logging.debug(f"MQTT connexion successfully established")
 except Exception as e:
