@@ -34,9 +34,9 @@ q = queue.Queue()
 # MQTT
 def on_connect(client, userdata, flags, rc):
     logging.debug(f"Connected to MQTT broker : {rc}")
-    client.subscribe("capteur/anemo/#")
-    client.subscribe("capteur/gps/#")
-    client.subscribe("capteur/imu/#")
+    client.subscribe("capteur/anemo/full")
+    client.subscribe("capteur/gps/full")
+    client.subscribe("capteur/imu/full")
 
 def on_message(client, userdata, msg):
     topic = msg.topic
