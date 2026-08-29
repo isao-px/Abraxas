@@ -3,6 +3,7 @@ from classes import *
 import subprocess
 import os
 import sys
+import socket
 
 s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 s.connect('/tmp/gpio_daemon.sock')
