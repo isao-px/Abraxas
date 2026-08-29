@@ -76,6 +76,7 @@ try:
                 logging.error(f"Error inserting anemo data: {e}")
                 logging.error(f"Topic was: {item[1]}")
                 logging.error(f"Payload was: {item[2]}")
+                logging.info(f"Request arguments were {(item[0], *item[2], session_id)}")
 
         # GPS data
         elif item[1] == "capteur/gps/full":
@@ -90,6 +91,7 @@ try:
                 logging.error(f"Error inserting gps data: {e}")
                 logging.error(f"Topic was: {item[1]}")
                 logging.error(f"Payload was: {item[2]}")
+                logging.info(f"Request arguments were {(item[0], *item[2], session_id)}")
 
         # IMU data
         elif item[1] == "capteur/imu/full":
@@ -104,6 +106,7 @@ try:
                 logging.error(f"Error inserting imu data: {e}")
                 logging.error(f"Topic was: {item[1]}")
                 logging.error(f"Payload was: {item[2]}")
+                logging.info(f"Request arguments were {(item[0], *item[2], session_id)}")
 
         q.task_done()
 
