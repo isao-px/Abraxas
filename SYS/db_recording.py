@@ -77,6 +77,7 @@ try:
                 logging.error(f"Topic was: {item[1]}")
                 logging.error(f"Payload was: {item[2]}")
                 logging.info(f"Request arguments were {(item[0], *item[2], session_id)}")
+                logging.info(f"Payload type was: {type(item[2])}")
 
         # GPS data
         elif item[1] == "capteur/gps/full":
@@ -92,6 +93,7 @@ try:
                 logging.error(f"Topic was: {item[1]}")
                 logging.error(f"Payload was: {item[2]}")
                 logging.info(f"Request arguments were {(item[0], *item[2], session_id)}")
+                logging.info(f"Payload type was: {type(item[2])}")
 
         # IMU data
         elif item[1] == "capteur/imu/full":
@@ -107,6 +109,7 @@ try:
                 logging.error(f"Topic was: {item[1]}")
                 logging.error(f"Payload was: {item[2]}")
                 logging.info(f"Request arguments were {(item[0], *item[2], session_id)}")
+                logging.info(f"Payload type was: {type(item[2])}")
 
         q.task_done()
 
