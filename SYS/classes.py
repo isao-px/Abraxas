@@ -57,7 +57,7 @@ class GPIOController:
         self.s.connect('/tmp/gpio_daemon.sock')
 
     def action(self, led_id, action):
-        self.s.send(f"{led_id}:{action}".encode())
+        self.s.send(f"{led_id}:{action}".encode("ASCII"))
 
     def receive_response(self):
         response = self.s.recv(1024).decode()
