@@ -46,10 +46,11 @@ try:
     logging.debug("Launching anemo.py")
     logging.debug("Launching vid.py")
     processes = [
-        subprocess.Popen(["python3", "imu.py", str(sys_data_base.session_id)]),
-        subprocess.Popen(["python3", "gps.py", str(sys_data_base.session_id)]),
-        subprocess.Popen(["python3", "anemo.py", str(sys_data_base.session_id)]),
-        subprocess.Popen(["python3", "vid.py", str(sys_data_base.session_id)]),
+        subprocess.Popen(["env/bin/python3", "imu.py", str(sys_data_base.session_id)]),
+        subprocess.Popen(["env/bin/python3", "gps.py", str(sys_data_base.session_id)]),
+        subprocess.Popen(["env/bin/python3", "anemo.py", str(sys_data_base.session_id)]),
+        subprocess.Popen(["env/bin/python3", "vid.py", str(sys_data_base.session_id)]),
+        subprocess.Popen(["env/bin/python3", "db_recording.py", str(sys_data_base.session_id)]),
     ]
 except Exception as e:
     logging.critical(f"Failed to launch the dependencies : {e}")
@@ -84,6 +85,6 @@ if ending_session:
 
     logging.debug("Session properly ended")
     logging.debug("launching grp.py")
-    fusion = subprocess.run(["python3", "grp.py", str(sys_data_base.session_id)])
+    fusion = subprocess.run(["env/bin/python3", "grp.py", str(sys_data_base.session_id)])
     logging.info(f"Master terminated for session {sys_data_base.session_id}")
     sys.exit(0)
