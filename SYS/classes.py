@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sqlite3
-import socket
 import colorlog
 import logging
 import threading
