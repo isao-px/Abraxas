@@ -51,65 +51,20 @@ class SysDataBase:
 
 class GPIOController:
     def __init__(self):
-        self.s = None
-        self.sock_path = '/tmp/gpio_daemon.sock'
-        self._create_socket()
-
-    def _create_socket(self):
-        try:
-            self.s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        except Exception as e:
-            logging.error(f"Failed to create socket: {e}")
-            self.s = None
+        self.s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 
     def connect_daemon(self):
-        if self.s is None:
-            self._create_socket()
-        try:
-            self.s.connect(self.sock_path)
-        except Exception as e:
-            logging.error(f"Failed to connect to gpio daemon: {e}")
-            raise
+        self.s.connect('/tmp/gpio_daemon.sock')
 
     def action(self, led_id, action):
-        if self.s is None:
-            logging.warning("Socket not created—attempting to recreate and reconnect")
-            self._create_socket()
-            try:
-                self.connect_daemon()
-            except Exception:
-                logging.error("Reconnect failed; skipping GPIO action")
-                return
-        try:
-            self.s.send(f"{led_id}:{action}".encode())
-        except (BrokenPipeError, OSError) as e:
-            logging.warning(f"Socket send failed ({e}); attempting reconnect and resend")
-            try:
-                self.cleanup()
-            except Exception:
-                pass
-            # recreate and try once
-            self._create_socket()
-            try:
-                self.connect_daemon()
-                self.s.send(f"{led_id}:{action}".encode())
-            except Exception as e2:
-                logging.error(f"Reconnect+send failed; giving up: {e2}")
+        self.s.send(f"{led_id}:{action}".encode("ASCII"))
 
     def receive_response(self):
-        try:
-            response = self.s.recv(1024).decode()
-            return response
-        except Exception as e:
-            logging.error(f"Failed to receive from gpio daemon: {e}")
-            return None
+        response = self.s.recv(1024).decode()
+        return response
 
     def cleanup(self):
-        try:
-            if self.s:
-                self.s.close()
-        finally:
-            self.s = None
+        self.s.close()
 
 def non_blocking(func):
     def wrapper(*args, **kwargs):
