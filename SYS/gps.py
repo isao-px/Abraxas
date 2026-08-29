@@ -2,6 +2,7 @@
 from classes import *
 import time
 import signal
+import sys
 from datetime import datetime
 import board
 import busio
@@ -47,11 +48,16 @@ client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
 client.on_connect = on_connect
 try:
     client.connect(BROKER_ADDRESS)
-    logging.debug(f"MQTT connexion successfuly established")
+    logging.debug(f"MQTT connexion successfully established")
 except Exception as e:
     logging.error(f"MQTT connexion failed : {e}")
 
-sys_data_base = SysDataBase(__file__)
+sys_data_base = False
+try:
+    session_id = sys.argv[1]
+except Exception as e:
+    sys_data_base = SysDataBase(__file__)
+    session_id = sys_data_base.session_id
 
 rx = board.RX
 tx = board.TX
@@ -67,7 +73,7 @@ period = 1/Hz
 gps.send_command(b'PMTK220,(period*1000)')
 
 logging.info(f"Starting")
-logging.debug(f"Saves the gps informations into {sys_data_base.db_name}")
+logging.debug(f"Sends the gps informations by MQTT")
 
 try:
     c = 0
@@ -85,24 +91,10 @@ try:
 
         gps_data = acquisition()
 
-        # Requête SQL
-        try:
-            sys_data_base.cursor.execute(
-                "INSERT INTO gps_data (timestamp, lat, lon, p_lat, p_lon, fix_qual, n_satellites, alt, alt_geoid, sog_kn, sog_kmh, cog, dilution, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (timestamp, *gps_data, sys_data_base.session_id)
-            )
-            # Valider l'écriture
-            if c >= Hz:
-                c = 0
-                sys_data_base.conn.commit()
-
-        except sqlite3.IntegrityError as e:
-            logging.warning(f"Integrity error: {e}")
-
         try:
             client.publish(f"{TOPIC_PREFIX}/sog", str(gps_data[8]), retain=True)
             client.publish(f"{TOPIC_PREFIX}/cog", str(gps_data[10]), retain=True)
-            logging.debug(f"MQTT transfert successfuly done : sog: {gps_data[8]}, cog: {gps_data[10]}")
+            client.publish(f"{TOPIC_PREFIX}/full", str(gps_data), retain=True)
         except Exception as e:
             logging.warning(f"MQTT transfert error : {e}")
 
@@ -115,5 +107,7 @@ except Exception as e:
     logging.error(f"The execution was interrupted: {e}")
 
 finally:
-    sys_data_base.terminate_database_connexion()
+    if sys_data_base:
+        logging.debug("Closing database connection")
+        sys_data_base.conn.close()
     logging.info(f"{__file__} terminated")

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from classes import *
 import serial
+import sys
 import time
 import signal
 import sqlite3
@@ -51,11 +52,16 @@ client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
 client.on_connect = on_connect
 try:
     client.connect(BROKER_ADDRESS)
-    logging.debug(f"MQTT connexion successfuly established")
+    logging.debug(f"MQTT connexion successfully established")
 except Exception as e:
     logging.error(f"MQTT connexion failed : {e}")
 
-sys_data_base = SysDataBase(__file__)
+sys_data_base = False
+try:
+    session_id = sys.argv[1]
+except Exception as e:
+    sys_data_base = SysDataBase(__file__)
+    session_id = sys_data_base.session_id
 
 anemo = serial.Serial(
     port='/dev/ttyUSB0',
@@ -70,7 +76,7 @@ anemo.reset_output_buffer()
 time.sleep(0.1)
 
 logging.info(f"Starting")
-logging.debug(f"Saves the anemo informations into {sys_data_base.db_name}")
+logging.debug(f"Sends the anemo informations by MQTT")
 
 try:
     while running:
@@ -80,19 +86,9 @@ try:
 
         if anemo_data:
             try:
-                sys_data_base.cursor.execute(
-                    "INSERT INTO anemo_data (timestamp, awa, aws, session_id) VALUES (?, ?, ?, ?)",
-                    (timestamp, *anemo_data, sys_data_base.session_id)
-                )
-                sys_data_base.conn.commit()
-    
-            except sqlite3.IntegrityError as e:
-                logging.error(f"Integrity error: {e}")
-
-            try:
                 client.publish(f"{TOPIC_PREFIX}/awa", str(anemo_data[0]), retain=True)
                 client.publish(f"{TOPIC_PREFIX}/aws", str(anemo_data[1]), retain=True)
-                logging.debug(f"MQTT transfert successfuly done : awa: {anemo_data[0]}, aws: {anemo_data[1]}")
+                client.publish(f"{TOPIC_PREFIX}/full", str(anemo_data), retain=True)
             except Exception as e:
                 logging.warning(f"MQTT transfert error : {e}")
 
@@ -104,6 +100,8 @@ except Exception as e:
     logging.error(f"The execution was interrupted: {e}")
 
 finally:
-    sys_data_base.terminate_database_connexion()
+    if sys_data_base:
+        logging.debug("Closing database connection")
+        sys_data_base.conn.close()
     anemo.close()
     logging.info(f"{__file__} terminated")

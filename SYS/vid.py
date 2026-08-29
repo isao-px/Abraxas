@@ -73,7 +73,7 @@ finally:
         try:
             proc.wait(timeout=4)
         except subprocess.TimeoutExpired:
-            logging.warning("Process did not terminate_database_connexion in time, sending SIGKILL.")
+            logging.warning("Process did not terminate in time, sending SIGKILL.")
             proc.kill()
     if sys_data_base:
         logging.debug("Closing database connection")

@@ -35,7 +35,7 @@ while True:
             else:
                 session_is_running = True
                 logging.debug("Launching master.py")
-                session = subprocess.Popen(["python3", "master.py"])
+                session = subprocess.Popen(["env/bin/python3", "master.py"])
             time.sleep(1)
             witness_button = False
 

@@ -3,6 +3,7 @@ from classes import *
 import time
 import signal
 import sqlite3
+import sys
 import paho.mqtt.client as mqtt
 from datetime import datetime
 from icm20948 import ICM20948
@@ -34,14 +35,19 @@ try:
 except Exception as e:
     logging.error(f"MQTT connexion failed : {e}")
 
-sys_data_base = SysDataBase(__file__)
+sys_data_base = False
+try:
+    session_id = sys.argv[1]
+except Exception as e:
+    sys_data_base = SysDataBase(__file__)
+    session_id = sys_data_base.session_id
 
 imu = ICM20948()
 Hz = 5
 period = 1 / Hz
 
 logging.info(f"Starting")
-logging.debug(f"Saves the imu informations into {sys_data_base.db_name}")
+logging.debug(f"Sends the imu informations by MQTT")
 
 compteur = 0
 try:
@@ -53,22 +59,9 @@ try:
         imu_data = acquisition()
 
         try:
-            sys_data_base.cursor.execute(
-                "INSERT INTO imu_data (timestamp, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (timestamp, *imu_data, sys_data_base.session_id)
-            )
-            # Valider l'écriture une fois par seconde
-            if compteur >= Hz:
-                compteur = 0
-                sys_data_base.conn.commit()
-
-        except sqlite3.IntegrityError as e:
-            logging.error(f"Integrity error: {e}")
-
-        try:
             client.publish(f"{TOPIC_PREFIX}/pitch", str(imu_data[4]), retain=True)
             client.publish(f"{TOPIC_PREFIX}/roll", str(imu_data[3]), retain=True)
-            logging.debug(f"MQTT transfert successfuly done : pitch: {imu_data[4]}, roll: {imu_data[3]}")
+            client.publish(f"{TOPIC_PREFIX}/full", str(imu_data), retain=True)
         except Exception as e:
             logging.warning(f"MQTT transfert error : {e}")
 
@@ -81,5 +74,7 @@ except Exception as e:
     logging.error(f"The execution was interrupted: {e}")
 
 finally:
-    sys_data_base.terminate_database_connexion()
+    if sys_data_base:
+        logging.debug("Closing database connection")
+        sys_data_base.conn.close()
     logging.info(f"{__file__} terminated")
