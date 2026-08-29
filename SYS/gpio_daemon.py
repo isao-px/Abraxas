@@ -4,7 +4,6 @@ import os
 import sys
 import threading
 import RPi.GPIO as GPIO
-from pip._internal.utils import logging
 import classes as cls
 
 # --- CONFIGURATION ---
