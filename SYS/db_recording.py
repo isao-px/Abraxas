@@ -53,6 +53,7 @@ try:
     client.loop_start()
 except Exception as e:
     logging.error(f"MQTT connexion failed : {e}")
+    exit(1)
 
 logging.info(f"Starting {__file__}")
 logging.debug(f"Using session_id = {session_id}, recording data into {sys_data_base.db_name}")
