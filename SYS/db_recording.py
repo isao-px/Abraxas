@@ -50,10 +50,9 @@ try:
     client.on_message = on_message
     client.connect(BROKER_ADDRESS)
     logging.debug(f"MQTT connexion successfully established")
+    client.loop_start()
 except Exception as e:
     logging.error(f"MQTT connexion failed : {e}")
-
-client.loop_start()
 
 logging.info(f"Starting {__file__}")
 logging.debug(f"Using session_id = {session_id}, recording data into {sys_data_base.db_name}")
