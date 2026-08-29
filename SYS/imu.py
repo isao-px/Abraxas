@@ -59,19 +59,6 @@ try:
         imu_data = acquisition()
 
         try:
-            sys_data_base.cursor.execute(
-                "INSERT INTO imu_data (timestamp, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (timestamp, *imu_data, sys_data_base.session_id)
-            )
-            # Valider l'écriture une fois par seconde
-            if compteur >= Hz:
-                compteur = 0
-                sys_data_base.conn.commit()
-
-        except sqlite3.IntegrityError as e:
-            logging.error(f"Integrity error: {e}")
-
-        try:
             client.publish(f"{TOPIC_PREFIX}/pitch", str(imu_data[4]), retain=True)
             client.publish(f"{TOPIC_PREFIX}/roll", str(imu_data[3]), retain=True)
             logging.debug(f"MQTT transfert successfuly done : pitch: {imu_data[4]}, roll: {imu_data[3]}")

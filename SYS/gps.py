@@ -91,20 +91,6 @@ try:
 
         gps_data = acquisition()
 
-        # Requête SQL
-        try:
-            sys_data_base.cursor.execute(
-                "INSERT INTO gps_data (timestamp, lat, lon, p_lat, p_lon, fix_qual, n_satellites, alt, alt_geoid, sog_kn, sog_kmh, cog, dilution, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (timestamp, *gps_data, sys_data_base.session_id)
-            )
-            # Valider l'écriture
-            if c >= Hz:
-                c = 0
-                sys_data_base.conn.commit()
-
-        except sqlite3.IntegrityError as e:
-            logging.warning(f"Integrity error: {e}")
-
         try:
             client.publish(f"{TOPIC_PREFIX}/sog", str(gps_data[8]), retain=True)
             client.publish(f"{TOPIC_PREFIX}/cog", str(gps_data[10]), retain=True)

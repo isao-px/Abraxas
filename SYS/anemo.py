@@ -86,16 +86,6 @@ try:
 
         if anemo_data:
             try:
-                sys_data_base.cursor.execute(
-                    "INSERT INTO anemo_data (timestamp, awa, aws, session_id) VALUES (?, ?, ?, ?)",
-                    (timestamp, *anemo_data, sys_data_base.session_id)
-                )
-                sys_data_base.conn.commit()
-    
-            except sqlite3.IntegrityError as e:
-                logging.error(f"Integrity error: {e}")
-
-            try:
                 client.publish(f"{TOPIC_PREFIX}/awa", str(anemo_data[0]), retain=True)
                 client.publish(f"{TOPIC_PREFIX}/aws", str(anemo_data[1]), retain=True)
                 logging.debug(f"MQTT transfert successfuly done : awa: {anemo_data[0]}, aws: {anemo_data[1]}")
