@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sqlite3
+import socket
 import colorlog
 import logging
 import threading
@@ -47,6 +48,23 @@ class SysDataBase:
 
     def actualise_session_id(self):
         self.session_id += 1
+
+class GPIOController:
+    def __init__(self):
+        self.s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+
+    def connect_daemon(self):
+        self.s.connect('/tmp/gpio_daemon.sock')
+
+    def action(self, led_id, action):
+        self.s.send(f"{led_id}:{action}".encode())
+
+    def receive_response(self):
+        response = self.s.recv(1024).decode()
+        return response
+
+    def cleanup(self):
+        self.s.close()
 
 def non_blocking(func):
     def wrapper(*args, **kwargs):
