@@ -109,9 +109,10 @@ node server/server.js                                                           
 
 LEDS :
 
-1 : Interface active
-2 : Serveur actif
-3 : grp actif
+1 : Interface active                                                            ok
+2 : Serveur actif (peut-être un témoin de connexion d'un client)                ok
+3 : grp actif                                                                   ok
+4 : vidéo active
 
 user@user:~ $ python3 interface.py
 2026-08-29 14:59:06 | interface.py | INFO | Starting
