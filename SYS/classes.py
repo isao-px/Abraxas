@@ -63,21 +63,16 @@ class GPIOController:
         response = self.s.recv(1024).decode()
         return response
 
-    def infinite_blink(self, led_id, frequency=1):
-        while True:
-            self.action(led_id, 'TOGGLE')
-            time.sleep(1/frequency)
-
     def cleanup(self):
         self.s.close()
 
 def non_blocking(func):
     def wrapper(*args, **kwargs):
-        thread = threading.Thread(target=func, args=args, kwargs=kwargs)
+        thread = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=True)
         thread.start()
+        return thread
     return wrapper
 
-@non_blocking
 def emergency_reboot():
     logging.warning("Emergency reboot initiated")
     time.sleep(1)
