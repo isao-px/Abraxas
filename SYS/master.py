@@ -45,6 +45,7 @@ try:
     logging.debug(f"Session {sys_data_base.session_id} created")
 except Exception as e:
     logging.error(f"Failed to create a new session : {e}")
+    GPIO.cleanup()
     sys.exit(1)
 
 try:
@@ -62,6 +63,7 @@ try:
 except Exception as e:
     logging.critical(f"Failed to launch the dependencies : {e}")
     shutdown()
+    GPIO.cleanup()
     sys.exit(1)
 
 try:
@@ -70,6 +72,7 @@ try:
 except Exception as e:
     logging.critical(f"Failed to terminate the subprocesses : {e}")
     shutdown()
+    GPIO.cleanup()
     sys.exit(1)
 
 if ending_session:
