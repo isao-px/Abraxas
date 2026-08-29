@@ -61,7 +61,7 @@ try:
         try:
             client.publish(f"{TOPIC_PREFIX}/pitch", str(imu_data[4]), retain=True)
             client.publish(f"{TOPIC_PREFIX}/roll", str(imu_data[3]), retain=True)
-            logging.debug(f"MQTT transfert successfuly done : pitch: {imu_data[4]}, roll: {imu_data[3]}")
+            logging.debug(f"MQTT transfert successfully done : pitch: {imu_data[4]}, roll: {imu_data[3]}")
         except Exception as e:
             logging.warning(f"MQTT transfert error : {e}")
 

@@ -52,7 +52,7 @@ client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
 client.on_connect = on_connect
 try:
     client.connect(BROKER_ADDRESS)
-    logging.debug(f"MQTT connexion successfuly established")
+    logging.debug(f"MQTT connexion successfully established")
 except Exception as e:
     logging.error(f"MQTT connexion failed : {e}")
 
