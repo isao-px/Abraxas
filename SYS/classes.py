@@ -63,6 +63,11 @@ class GPIOController:
         response = self.s.recv(1024).decode()
         return response
 
+    def infinite_blink(self, led_id, frequency=1):
+        while True:
+            self.action(led_id, 'TOGGLE')
+            time.sleep(1/frequency)
+
     def cleanup(self):
         self.s.close()
 
