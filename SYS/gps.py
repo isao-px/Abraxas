@@ -73,7 +73,7 @@ period = 1/Hz
 gps.send_command(b'PMTK220,(period*1000)')
 
 logging.info(f"Starting")
-logging.debug(f"Saves the gps informations into {sys_data_base.db_name}")
+logging.debug(f"Sends the gps informations by MQTT")
 
 try:
     c = 0

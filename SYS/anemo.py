@@ -76,7 +76,7 @@ anemo.reset_output_buffer()
 time.sleep(0.1)
 
 logging.info(f"Starting")
-logging.debug(f"Saves the anemo informations into {sys_data_base.db_name}")
+logging.debug(f"Sends the anemo informations by MQTT")
 
 try:
     while running:

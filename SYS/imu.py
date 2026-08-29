@@ -47,7 +47,7 @@ Hz = 5
 period = 1 / Hz
 
 logging.info(f"Starting")
-logging.debug(f"Saves the imu informations into {sys_data_base.db_name}")
+logging.debug(f"Sends the imu informations by MQTT")
 
 compteur = 0
 try:
