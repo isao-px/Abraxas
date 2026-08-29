@@ -3,10 +3,16 @@ const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
 const path = require('path');
+const net = require('net');
 
+const client = new net.Socket();
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+client.connect('/tmp/gpio_daemon.sock', () => {
+    client.write('2:ON');
+});
 
 // 1. Servir les différents fichiers
 app.get('/', (req, res) => {
