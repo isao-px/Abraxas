@@ -6,6 +6,7 @@ import time
 import logging
 from datetime import datetime
 import signal
+import RPi.GPIO as GPIO
 
 ending_session = False
 
