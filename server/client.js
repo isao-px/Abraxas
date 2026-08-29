@@ -11,7 +11,7 @@ function updateData() {
     const twa = cog_rad - twd;
     const vmg = sensorData.sog * Math.cos(twa);
 
-    // Entretien du tableau d'affichage. Peut-être créer un historique avec en sql
+    // Entretien du tableau d'affichage. Peut-être créer un historique en sql
     displayData.tws = tws;
     displayData.twa = twa * (180 / Math.PI);
     displayData.vmg = vmg;
