@@ -13,6 +13,9 @@ button = Button(24, pull_up=True)
 witness_button = False
 session_is_running = False
 session = None
+gpio_controller = GPIOController()
+gpio_controller.connect_daemon()
+gpio_controller.action('1', 'ON')
 
 def bouton_pressed():
     global witness_button
@@ -57,5 +60,11 @@ while True:
         except Exception as e:
             logging.error("Failed to stop the ongoing session")
         logging.warning("Interface.py is exiting")
+        gpio_controller.action('1', 'OFF')
+        gpio_controller.cleanup()
         emergency_reboot()
         sys.exit(1)
+
+    finally:
+        gpio_controller.action('1', 'OFF')
+        gpio_controller.cleanup()
