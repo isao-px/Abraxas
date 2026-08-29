@@ -3,6 +3,7 @@ from classes import *
 import time
 import signal
 import sqlite3
+import paho.mqtt.client as mqtt
 from datetime import datetime
 from icm20948 import ICM20948
 
@@ -18,6 +19,20 @@ def acquisition():
     mag_x, mag_y, mag_z = imu.read_magnetometer_data()
     accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z = imu.read_accelerometer_gyro_data()
     return mag_x, mag_y, mag_z, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z
+
+# MQTT
+BROKER_ADDRESS = "localhost"
+TOPIC_PREFIX = "capteur/imu"
+CLIENT_ID = __file__
+def on_connect(client, userdata, flags, rc):
+    logging.debug(f"Connected to MQTT broker : {rc}")
+client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
+client.on_connect = on_connect
+try:
+    client.connect(BROKER_ADDRESS)
+    logging.debug(f"MQTT connexion successfuly established")
+except Exception as e:
+    logging.error(f"MQTT connexion failed : {e}")
 
 sys_data_base = SysDataBase(__file__)
 
@@ -49,6 +64,13 @@ try:
 
         except sqlite3.IntegrityError as e:
             logging.error(f"Integrity error: {e}")
+
+        try:
+            client.publish(f"{TOPIC_PREFIX}/pitch", str(imu_data[4]), retain=True)
+            client.publish(f"{TOPIC_PREFIX}/roll", str(imu_data[3]), retain=True)
+            logging.debug(f"MQTT transfert successfuly done : pitch: {imu_data[4]}, roll: {imu_data[3]}")
+        except Exception as e:
+            logging.warning(f"MQTT transfert error : {e}")
 
         # Gestion de la fréquence
         remaining = period - (time.monotonic() - start)

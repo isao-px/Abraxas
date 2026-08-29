@@ -8,6 +8,7 @@ import busio
 import adafruit_gps
 import serial
 import sqlite3
+import paho.mqtt.client as mqtt
 
 # Interruption par master.py ou par Ctrl+C
 running = True
@@ -35,6 +36,20 @@ def acquisition():
     dilution = gps.horizontal_dilution
 
     return lat, lon, p_lat, p_lon, fix_qual, n_satellites, alt, alt_geoid, sog_kn, sog_kmh, cog, dilution
+
+# MQTT
+BROKER_ADDRESS = "localhost"
+TOPIC_PREFIX = "capteur/gps"
+CLIENT_ID = __file__
+def on_connect(client, userdata, flags, rc):
+    logging.debug(f"Connected to MQTT broker : {rc}")
+client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
+client.on_connect = on_connect
+try:
+    client.connect(BROKER_ADDRESS)
+    logging.debug(f"MQTT connexion successfuly established")
+except Exception as e:
+    logging.error(f"MQTT connexion failed : {e}")
 
 sys_data_base = SysDataBase(__file__)
 
@@ -83,6 +98,13 @@ try:
 
         except sqlite3.IntegrityError as e:
             logging.warning(f"Integrity error: {e}")
+
+        try:
+            client.publish(f"{TOPIC_PREFIX}/sog", str(gps_data[8]), retain=True)
+            client.publish(f"{TOPIC_PREFIX}/cog", str(gps_data[10]), retain=True)
+            logging.debug(f"MQTT transfert successfuly done : sog: {gps_data[8]}, cog: {gps_data[10]}")
+        except Exception as e:
+            logging.warning(f"MQTT transfert error : {e}")
 
         # Gestion de la fréquence
         remaining = period - (time.monotonic() - start)

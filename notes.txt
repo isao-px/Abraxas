@@ -1,0 +1,106 @@
+sudo apt install sqlite3
+
+nmcli device wifi list
+nmcli --ask dev wifi connect linuxtricks
+
+user@user:~ $ sqlite3 sys.db
+SQLite version 3.46.1 2024-08-13 09:16:08
+Enter ".help" for usage hints.
+sqlite> CREATE TABLE imu_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp DATETIME NOT NULL,
+
+    accel_x REAL NOT NULL,
+    accel_y REAL NOT NULL,
+    accel_z REAL NOT NULL,
+
+    gyro_x REAL NOT NULL,
+    gyro_y REAL NOT NULL,
+    gyro_z REAL NOT NULL,
+
+    mag_x REAL NOT NULL,
+    mag_y REAL NOT NULL,
+    mag_z REAL NOT NULL,
+    
+    session_id INTAGER NOT NULL);
+sqlite> .exit
+
+user@user:~ $ sqlite3 sys.db -header -column "SELECT * FROM imu_data;"
+id  timestamp                   accel_x  accel_y         accel_z        gyro_x              gyro_y            gyro_z              mag_x  mag_y  mag_z  session_id
+--  --------------------------  -------  --------------  -------------  ------------------  ----------------  ------------------  -----  -----  -----  ----------
+1   2026-03-28T10:52:48.056174  0.21875  -0.02783203125  1.02197265625  -0.709923664122137  2.22137404580153  -0.793893129770992  8.55   1.05   35.85  0
+
+
+timestamp, lat, lon, p_lat, p_lon, fix_qual, n_satellites, alt, alt_geoid, sog_kn, sog_kmh, cog, dilution, session_id
+
+sqlite> CREATE TABLE gps_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp DATETIME NOT NULL,
+
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    p_lat VARCHAR NOT NULL,
+    p_lon VARCHAR NOT NULL,
+
+    fix_qual REAL,
+    n_satellites INTAGER,
+
+    alt REAL,
+    alt_geoid REAL,
+    
+    sog_kn REAL NOT NULL,
+    sog_kmh REAL,
+    cog REAL NOT NULL,
+
+    dilution REAL,
+    session_id INTAGER NOT NULL);
+
+user@user:~ $ sqlite3 sys.db -header -column "SELECT * FROM gps_data;"
+id  timestamp                   lat        lon       p_lat                  p_lon                fix_qual  n_satellites  alt    alt_geoid  sog_kn  sog_kmh  cog    dilution  session_id
+--  --------------------------  ---------  --------  ---------------------  -------------------  --------  ------------  -----  ---------  ------  -------  -----  --------  ----------
+1   2026-03-28T10:41:18.293825  46.188555  6.139563  46 degs, 11.3133 mins  6 degs, 8.3738 mins  1.0       5             434.4  48.2       0.28             75.51  3.71      0
+
+
+sqlite> CREATE TABLE sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    
+    start DATETIME NOT NULL,
+    stop DATETIME,
+    
+    name VARCHAR);
+
+sudo apt install python3-colorlog
+
+user@user:~ $ sqlite3 sys.db
+SQLite version 3.46.1 2024-08-13 09:16:08
+Enter ".help" for usage hints.
+sqlite> CREATE TABLE anemo_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp DATETIME NOT NULL,
+
+    direct INTEGER NOT NULL,
+    force REAL NOT NULL,
+    
+    session_id INTAGER NOT NULL);
+sqlite> .exit
+
+
+
+source env/bin/activate                                                         ok
+chown user sys.db                                                               ok
+apt -y install ffmpeg                                                           ok
+sudo apt -y install nodejs                                                      ok
+sudo apt -y install npm                                                         ok
+
+sudo pip3 install paho-mqtt --break-system-packages --root-user-action          ok
+sudo apt -y install mosquitto mosquitto-clients                                 ok
+sudo systemctl start mosquitto                                                  ok
+sudo systemctl enable mosquitto                                                 ok
+
+mkdir server                                                                    ok
+cd server                                                                       ok
+npm init -y                                                                     ok
+npm install express socket.io                                                   ok
+npm install mqtt                                                                ok
+cd                                                                              ok
+node server/server.js                                                           ok

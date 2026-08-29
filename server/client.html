@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Raspberry</title>
+    <link rel="stylesheet" href="client.css">
+</head>
+
+<body>
+<div class="grid-container">
+    <div style="color: #d79a02" class="card square">
+        <div class="title">TWS</div>
+        <div class="data" id="tws">--.-</div>
+        <div class="title">knt</div>
+    </div>
+
+    <div style="color: #e75b0f" class="card square">
+        <div class="title">TWA</div>
+        <div class="data" style="font-size: 2em" id="twa">--</div>
+        <div class="title">degrees</div>
+    </div>
+
+    <div style="color: #00ab55" class="card square">
+        <div class="title">SOG</div>
+        <div class="data" style="font-size: 2em" id="sog">--.-</div>
+        <div class="title">knt</div>
+    </div>
+
+    <div style="color: #0098ba" class="card square">
+        <div class="title">VMG</div>
+        <div class="data" style="font-size: 2em" id="vmg">--.-</div>
+        <div class="title">knt</div>
+    </div>
+
+    <div class="dynamic-container">
+        <div style="color: #bd1df2; position: relative; overflow: hidden" class="card">
+            <img src="pitch.png" style="z-index: 0" class="pitch_line">
+            <div></div>
+            <div style="z-index: 1000"><span style="opacity: 0.7">Pitch : </span><span id="pitch">--.-</span>°</div>
+            <div></div>
+        </div>
+
+        <div style="color: #f0188b; position: relative; overflow: hidden" class="card">
+            <img src="roll.png" style="z-index: 0" class="roll_line">
+            <div></div>
+            <div style="z-index: 1000"><span style="opacity: 0.7">Roll : </span><span id="roll">--.-</span>°</div>
+            <div></div>
+        </div>
+    </div>
+</div>
+<div  style="justify-content: right; position: absolute"><p style="margin-top: -1.3em; margin-left: 20px" id="status"></p></div>
+
+<!-- Importation de la librairie client Socket.io (servie automatiquement par le serveur) -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+</body>
+
+</html>

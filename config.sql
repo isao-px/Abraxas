@@ -38,6 +38,15 @@ CREATE TABLE gps_data (
     dilution REAL,
     session_id INTAGER NOT NULL);
 
+CREATE TABLE anemo_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp DATETIME NOT NULL,
+
+    awa INTEGER NOT NULL,
+    aws REAL NOT NULL,
+
+    session_id INTAGER NOT NULL);
+
 CREATE TABLE sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
