@@ -13,7 +13,7 @@ try:
     GPIO.setup(1, GPIO.OUT)
     GPIO.output(1, GPIO.HIGH)
 except Exception as e:
-    logging.warning(f"Failed to setup GPIO : {e}")
+    logging.warning(f"Failed to setup and enable GPIO : {e}")
 ending_session = False
 
 def handle_usr1(signum, frame):
