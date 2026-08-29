@@ -6,6 +6,7 @@ import time
 import logging
 from datetime import datetime
 import signal
+import socket
 
 ending_session = False
 
