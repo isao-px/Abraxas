@@ -45,7 +45,7 @@ def on_message(client, userdata, msg):
     q.put((datetime.now().isoformat(), topic, payload))
 
 try:
-    client = mqtt.Client(callback_api_version=2, client_id=CLIENT_ID)
+    client = mqtt.Client(client_id=CLIENT_ID)
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect(BROKER_ADDRESS)
@@ -68,7 +68,7 @@ try:
             try:
                 sys_data_base.cursor.execute(
                     "INSERT INTO anemo_data (timestamp, awa, aws, session_id) VALUES (?, ?, ?, ?)",
-                    (item[0], *item, session_id)
+                    (item[0], *item[2], session_id)
                 )
             except sqlite3.IntegrityError as e:
                 logging.error(f"Integrity error: {e}")
@@ -78,7 +78,7 @@ try:
             try:
                 sys_data_base.cursor.execute(
                     "INSERT INTO gps_data (timestamp, lat, lon, p_lat, p_lon, fix_qual, n_satellites, alt, alt_geoid, sog_kn, sog_kmh, cog, dilution, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    (item[0], *item, session_id)
+                    (item[0], *item[2], session_id)
                 )
             except sqlite3.IntegrityError as e:
                 logging.error(f"Integrity error: {e}")
@@ -88,7 +88,7 @@ try:
             try:
                 sys_data_base.cursor.execute(
                     "INSERT INTO imu_data (timestamp, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z, session_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    (item[0], *item, session_id)
+                    (item[0], *item[2], session_id)
                 )
             except sqlite3.IntegrityError as e:
                 logging.error(f"Integrity error: {e}")
