@@ -112,3 +112,15 @@ LEDS :
 1 : Interface active
 2 : Serveur actif
 3 : grp actif
+
+user@user:~ $ python3 interface.py
+2026-08-29 14:59:06 | interface.py | INFO | Starting
+2026-08-29 14:59:06 | interface.py | INFO | Interface is standing by, ready for a new session
+Traceback (most recent call last):
+  File "/home/user/interface.py", line 77, in <module>
+    gpio_controller.action('1', 'OFF')
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/user/classes.py", line 60, in action
+    self.s.send(f"{led_id}:{action}".encode())
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
