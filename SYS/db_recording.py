@@ -55,6 +55,9 @@ except Exception as e:
 
 client.loop_start()
 
+logging.info(f"Starting {__file__}")
+logging.debug(f"Using session_id = {session_id}, recording data into {sys_data_base.db_name}")
+
 try:
     last_commit = time.time()
     while running:
