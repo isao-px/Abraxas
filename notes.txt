@@ -104,3 +104,11 @@ npm install express socket.io                                                   
 npm install mqtt                                                                ok
 cd                                                                              ok
 node server/server.js                                                           ok
+
+
+
+LEDS :
+
+1 : Interface active
+2 : Serveur actif
+3 : grp actif
