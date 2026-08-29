@@ -8,6 +8,11 @@ from datetime import datetime
 import signal
 import RPi.GPIO as GPIO
 
+try:
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(1, GPIO.OUT)
+except Exception as e:
+    logging.warning(f"Failed to setup GPIO : {e}")
 ending_session = False
 
 def handle_usr1(signum, frame):
