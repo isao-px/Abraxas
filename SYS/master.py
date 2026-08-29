@@ -11,6 +11,7 @@ import RPi.GPIO as GPIO
 try:
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(1, GPIO.OUT)
+    GPIO.output(1, GPIO.HIGH)
 except Exception as e:
     logging.warning(f"Failed to setup GPIO : {e}")
 ending_session = False
