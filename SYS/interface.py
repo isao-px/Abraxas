@@ -13,8 +13,7 @@ button = Button(24, pull_up=True)
 witness_button = False
 session_is_running = False
 session = None
-gpio_controller = GPIOController()
-gpio_controller.connect_daemon()
+s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 witness_is_on = False
 
 def bouton_pressed():
@@ -27,7 +26,8 @@ logging.info("Interface is standing by, ready for a new session")
 
 while not witness_is_on:
     try:
-        gpio_controller.action('1', 'ON')
+        s.connect('/tmp/gpio_daemon.sock')
+        s.send(b'1:ON')
         witness_is_on = True
     except Exception as e:
         logging.warning(f"Error occurred while turning on GPIO 1: {e}")
@@ -73,7 +73,7 @@ while True:
 
     finally:
         try:
-            gpio_controller.action('1', 'OFF')
+            s.send(b'1:OFF')
         except Exception as e:
             logging.error(f"Error occurred while turning off GPIO 1: {e}")
-        gpio_controller.cleanup()
+        s.close()

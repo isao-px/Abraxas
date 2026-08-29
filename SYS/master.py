@@ -24,9 +24,9 @@ def shutdown():
             logging.warning(f"Process {proc} did not terminate in time, sending SIGKILL.")
             proc.kill()
 
-gpio_controller = GPIOController()
-gpio_controller.connect_daemon()
-gpio_controller.action('SESSION', 'ON')
+s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+s.connect('/tmp/gpio_daemon.sock')
+s.send(b'SESSION:ON')
 
 sys_data_base = SysDataBase(__file__)
 logging.info("Starting")
@@ -42,7 +42,7 @@ try:
     logging.debug(f"Session {sys_data_base.session_id} created")
 except Exception as e:
     logging.error(f"Failed to create a new session : {e}")
-    gpio_controller.cleanup()
+    s.close()
     sys.exit(1)
 
 try:
@@ -60,7 +60,7 @@ try:
 except Exception as e:
     logging.critical(f"Failed to launch the dependencies : {e}")
     shutdown()
-    gpio_controller.cleanup()
+    s.close()
     sys.exit(1)
 
 try:
@@ -69,7 +69,7 @@ try:
 except Exception as e:
     logging.critical(f"Failed to terminate the subprocesses : {e}")
     shutdown()
-    gpio_controller.cleanup()
+    s.close()
     sys.exit(1)
 
 if ending_session:
@@ -88,14 +88,14 @@ if ending_session:
         logging.debug(f"Session {sys_data_base.session_id} ended, connexion closed")
     except Exception as e:
         logging.error(f"Failed to properly end the session : {e}")
-        gpio_controller.cleanup()
+        s.close()
         sys.exit(1)
 
     logging.debug("Session properly ended")
-    gpio_controller.action('SESSION', 'OFF')
+    s.send(b'SESSION:OFF')
     logging.debug("launching grp.py")
     fusion = subprocess.run(["env/bin/python3", "grp.py", str(sys_data_base.session_id)])
     logging.info(f"Master terminated for session {sys_data_base.session_id}")
-    gpio_controller.action('3', 'OFF')
-    gpio_controller.cleanup()
+    s.send(b'3:OFF')
+    s.close()
     sys.exit(0)
