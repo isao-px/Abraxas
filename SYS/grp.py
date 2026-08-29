@@ -4,13 +4,13 @@ import subprocess
 import os
 import sys
 
-gpio_controller = GPIOController()
-gpio_controller.connect_daemon()
+s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+s.connect('/tmp/gpio_daemon.sock')
 
 @non_blocking
 def blink():
     while True:
-        gpio_controller.action('3', 'TOGGLE')
+        s.send(b'3:TOGGLE')
         time.sleep(1)
 
 blink()
@@ -70,5 +70,5 @@ finally:
         sys_data_base.conn.close()
     if os.path.exists("list.txt"):
         os.remove("list.txt")
-    gpio_controller.cleanup()
+    s.close()
     logging.info(f"{__file__} terminated")
