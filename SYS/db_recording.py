@@ -72,6 +72,10 @@ try:
                 )
             except sqlite3.IntegrityError as e:
                 logging.error(f"Integrity error: {e}")
+            except Exception as e:
+                logging.error(f"Error inserting anemo data: {e}")
+                logging.error(f"Topic was: {item[1]}")
+                logging.error(f"Payload was: {item[2]}")
 
         # GPS data
         elif item[1] == "capteur/gps/full":
@@ -82,6 +86,10 @@ try:
                 )
             except sqlite3.IntegrityError as e:
                 logging.error(f"Integrity error: {e}")
+            except Exception as e:
+                logging.error(f"Error inserting gps data: {e}")
+                logging.error(f"Topic was: {item[1]}")
+                logging.error(f"Payload was: {item[2]}")
 
         # IMU data
         elif item[1] == "capteur/imu/full":
@@ -92,6 +100,10 @@ try:
                 )
             except sqlite3.IntegrityError as e:
                 logging.error(f"Integrity error: {e}")
+            except Exception as e:
+                logging.error(f"Error inserting imu data: {e}")
+                logging.error(f"Topic was: {item[1]}")
+                logging.error(f"Payload was: {item[2]}")
 
         q.task_done()
 
