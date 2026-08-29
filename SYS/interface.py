@@ -29,6 +29,7 @@ while not witness_is_on:
     try:
         s.connect('/tmp/gpio_daemon.sock')
         s.sendall(b'1:ON')
+        s.close()
         witness_is_on = True
     except Exception as e:
         logging.warning(f"Error occurred while turning on GPIO 1: {e}")
