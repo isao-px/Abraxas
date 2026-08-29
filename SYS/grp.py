@@ -12,7 +12,7 @@ def blink():
         s.connect('/tmp/gpio_daemon.sock')
         s.send(b'3:TOGGLE')
         s.close()
-        time.sleep(1)
+        time.sleep(0.5)
 
 blink()
 
