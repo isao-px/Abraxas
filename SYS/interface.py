@@ -15,6 +15,7 @@ session_is_running = False
 session = None
 gpio_controller = GPIOController()
 gpio_controller.connect_daemon()
+witness_is_on = False
 
 def bouton_pressed():
     global witness_button
@@ -24,9 +25,16 @@ button.when_pressed = bouton_pressed
 logging.info("Starting")
 logging.info("Interface is standing by, ready for a new session")
 
-while True:
+while not witness_is_on:
     try:
         gpio_controller.action('1', 'ON')
+        witness_is_on = True
+    except Exception as e:
+        logging.warning(f"Error occurred while turning on GPIO 1: {e}")
+        time.sleep(1)
+
+while True:
+    try:
         if witness_button:
             logging.debug("Button pressed")
             if session_is_running:
