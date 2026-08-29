@@ -1,4 +1,4 @@
-# Hello world
+#!/usr/bin/env python
 from classes import *
 import sys
 import queue
