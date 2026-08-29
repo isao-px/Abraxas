@@ -7,8 +7,8 @@ import socket
 
 @non_blocking
 def blink():
-    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     while True:
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         s.connect('/tmp/gpio_daemon.sock')
         s.send(b'3:TOGGLE')
         s.close()
