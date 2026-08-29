@@ -5,11 +5,10 @@ import os
 import sys
 import socket
 
-s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-s.connect('/tmp/gpio_daemon.sock')
-
 @non_blocking
 def blink():
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.connect('/tmp/gpio_daemon.sock')
     while True:
         s.send(b'3:TOGGLE')
         time.sleep(1)
@@ -71,5 +70,4 @@ finally:
         sys_data_base.conn.close()
     if os.path.exists("list.txt"):
         os.remove("list.txt")
-    s.close()
     logging.info(f"{__file__} terminated")
