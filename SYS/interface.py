@@ -12,6 +12,9 @@ import socket
 
 BOUTON_SESSION = Button(24, pull_up=True)
 witness_button_session = False
+BOUTON_ONOFF = Button(17, pull_up=True)
+witness_button_onoff = False
+
 session_is_running = False
 session = None
 
