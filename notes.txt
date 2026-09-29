@@ -125,3 +125,73 @@ Traceback (most recent call last):
     self.s.send(f"{led_id}:{action}".encode())
     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 BrokenPipeError: [Errno 32] Broken pipe
+
+curl https://get.pimoroni.com/onoffshim | bash
+répondre y puis N :
+
+user@user:~ $ curl https://get.pimoroni.com/onoffshim | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 34816  100 34816    0     0  31835      0  0:00:01  0:00:01 --:--:-- 31882
+
+This script will install everything needed to use
+On/Off SHIM
+
+Always be careful when running scripts and commands copied
+from the internet. Ensure they are from a trusted source.
+
+This script should -- only be run on a Raspberry Pi with RPi OS --
+other systems and SBCs are not supported and may explode!
+
+If you want to see what this script does before running it,
+you should run: 'curl https://get.pimoroni.com/onoffshim'
+
+
+Do you wish to continue? [y/N] y
+
+Checking environment...
+Updating apt indexes...
+.....................
+
+Checking hardware requirements...
+
+Checking for packages required for GPIO control...
+raspi-gpio is required
+package raspi-gpio can't be found, fetching from alternative location...
+Selecting previously unselected package raspi-gpio.
+(Reading database ... 115812 files and directories currently installed.)
+Preparing to unpack .../raspi-gpio_0.20170105_armhf.deb ...
+Unpacking raspi-gpio (0.20170105) ...
+Setting up raspi-gpio (0.20170105) ...
+
+Checking for dependencies...
+
+Cloning Github repo locally...
+Cloning into 'clean-shutdown'...
+remote: Enumerating objects: 19, done.
+remote: Counting objects: 100% (19/19), done.
+remote: Compressing objects: 100% (12/12), done.
+remote: Total 19 (delta 0), reused 12 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (19/19), 134.74 KiB | 821.00 KiB/s, done.
+
+Finalising Install...
+
+Installing dependencies...
+
+Installing daemon...
+cleanshutd.service is not a native service, redirecting to systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable cleanshutd
+
+Installing GPIO Power Off support...
+
+cp: cannot create regular file '/lib/systemd/system-shutdown/gpio-poweroff': No such file or directory
+
+Applying default settings for OnOff SHIM...
+
+All done!
+
+
+Some changes made to your system require
+your computer to reboot to take effect.
+
+Would you like to reboot now? [y/N] n
