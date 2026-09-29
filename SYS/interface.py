@@ -26,6 +26,11 @@ def bouton_session_pressed():
     witness_button_session = True
 BOUTON_SESSION.when_pressed = bouton_session_pressed
 
+def bouton_onoff_pressed():
+    global witness_button_onoff
+    witness_button_onoff = True
+BOUTON_ONOFF.when_pressed = bouton_onoff_pressed
+
 logging.info("Starting")
 logging.info("Interface is standing by, ready for a new session")
 
