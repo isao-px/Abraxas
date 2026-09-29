@@ -58,4 +58,4 @@ def non_blocking(func):
 def emergency_reboot():
     logging.warning("Emergency reboot initiated")
     time.sleep(1)
-    subprocess.Popen(["sudo", "reboot"])
+    subprocess.Popen(["sudo", "raspi-gpio", "set", "4", "op", "dl"])
