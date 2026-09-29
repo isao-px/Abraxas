@@ -61,6 +61,14 @@ while True:
             time.sleep(1)
             witness_button_session = False
 
+        if witness_button_onoff:
+            logging.info("Shutting down the system")
+            if session_is_running and session:
+                logging.debug("Sending SIGUSR1 to master.py")
+                os.kill(session.pid, signal.SIGUSR1)
+            logging.debug("Turning off GPIO 4")
+            subprocess.Popen(["sudo", "raspi-gpio", "set", "4", "op", "dl"])
+
         time.sleep(0.1)
     except KeyboardInterrupt:
         logging.info("Shutting down due to a KeyboardInterrupt")
