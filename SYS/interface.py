@@ -10,17 +10,17 @@ import time
 import sys
 import socket
 
-button = Button(24, pull_up=True)
-witness_button = False
+BOUTON_SESSION = Button(24, pull_up=True)
+witness_button_session = False
 session_is_running = False
 session = None
 s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 witness_is_on = False
 
-def bouton_pressed():
-    global witness_button
-    witness_button = True
-button.when_pressed = bouton_pressed
+def bouton_session_pressed():
+    global witness_button_session
+    witness_button_session = True
+BOUTON_SESSION.when_pressed = bouton_session_pressed
 
 logging.info("Starting")
 logging.info("Interface is standing by, ready for a new session")
@@ -37,7 +37,7 @@ while not witness_is_on:
 
 while True:
     try:
-        if witness_button:
+        if witness_button_session:
             logging.debug("Button pressed")
             if session_is_running:
                 session_is_running = False
@@ -50,7 +50,7 @@ while True:
                 logging.debug("Launching master.py")
                 session = subprocess.Popen(["env/bin/python3", "master.py"])
             time.sleep(1)
-            witness_button = False
+            witness_button_session = False
 
         time.sleep(0.1)
     except KeyboardInterrupt:
