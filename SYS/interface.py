@@ -14,6 +14,7 @@ BOUTON_SESSION = Button(24, pull_up=True)
 witness_button_session = False
 session_is_running = False
 session = None
+
 s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 witness_is_on = False
 
