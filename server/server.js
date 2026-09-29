@@ -24,11 +24,8 @@ app.get('/client.css', (req, res) => {
 app.get('/client.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'client.js'));
 });
-app.get('/roll.png', (req, res) => {
-    res.sendFile(path.join(__dirname, 'roll.png'));
-});
-app.get('/pitch.png', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pitch.png'));
+app.get('/horizon.png', (req, res) => {
+    res.sendFile(path.join(__dirname, 'horizon.png'));
 });
 
 // 2. Gestion des connexions WebSocket
