@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-    background-color: #ecece3;
+    background-color: #f0eee6;
     height: 100vh;
     overflow: hidden;
 }
@@ -17,7 +17,7 @@ body {
 }
 
 .card {
-    background-color: #ddd8ca;
+    background-color: #e3dacc;
     display: flex;
     align-items: center;
     font-size: 2rem;
