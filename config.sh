@@ -165,6 +165,20 @@ main() {
 	cd /home/"$user"/ || exit
 	success "Server successfully initialised"
 
+	# Wifi hotspot
+    inform "Configuring the wifi hotspot"
+    nmcli connection delete Hotspot 2>/dev/null || true
+    nmcli connection add type wifi ifname wlan0 con-name Hotspot \
+        autoconnect yes \
+        ssid Abraxas \
+        802-11-wireless.mode ap \
+        802-11-wireless.band bg \
+        802-11-wireless.channel 6 \
+        ipv4.method shared \
+        connection.autoconnect-priority -10
+    next_step
+    success "Wifi hotspot configured successfully"
+
     # Configuration of cron
     inform "Configuring cron"
     chmod +x /home/"$user"/interface.py
@@ -200,7 +214,7 @@ success "Progress bar script installed successfully"
 source "progress_bar.sh"
 
 inform "This might take a few minutes"
-main > >(progress_bar::process "Configuring the Raspberry" 38) 2>&1
+main > >(progress_bar::process "Configuring the Raspberry" 39) 2>&1
 echo
 echo
 reboot
