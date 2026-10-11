@@ -2,7 +2,7 @@
 Lightweight and portable system developed to monitor inshore sailing training, aiming at improving performance by giving more resource for the coaching.
 
 ## Documentation
-For full documentation, read [Abraxas - Démarche.typ](https://typst.app/project/rB3uuDzbXYr2Xvcu7VZXtv) (French)
+For full documentation, read [Abraxas - Démarche.typ](https://typst.app/project/rB3uuDzbXYr2Xvcu7VZXtv) (French)  
 For project report, read [Abraxas - Rapport.typ](https://typst.app/project/r8A0kcq9RfPNwB44nHSP6I) (French)
 
 ## Hardware
