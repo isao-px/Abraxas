@@ -2,7 +2,8 @@
 Lightweight and portable system developed to monitor inshore sailing training, aiming at improving performance by giving more resource for the coaching.
 
 ## Documentation
-For full documentation, read [Documentation.pdf](https://github.com/isao-px/Abraxas/blob/main/Documentation.pdf) (French)
+For full documentation, read [Abraxas - Démarche.typ](https://typst.app/project/rB3uuDzbXYr2Xvcu7VZXtv) (French)
+For project report, read [Abraxas - Rapport.typ](https://typst.app/project/r8A0kcq9RfPNwB44nHSP6I) (French)
 
 ## Hardware
 The full hardware setup is described in the documentation, but for the installation you'll only need a network connected Raspberry Pi Zero 2 initialized with a decently recent version of [Raspberry Pi OS Lite (64-bit)](https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2026-04-21/2026-04-21-raspios-trixie-arm64-lite.img.xz).
