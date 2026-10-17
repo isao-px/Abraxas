@@ -125,7 +125,7 @@ main() {
     # Anemo
     inform "Installing Anemometer"
     cd /home/"$user"/ || exit
-    # pip3 install pyserial --break-system-packages --root-user-action=ignore
+    pip3 install pyserial --break-system-packages --root-user-action=ignore # Si l'installation ne se finit jamais, tenter de commenter cette ligne et de l'exécuter séparément.
     next_step
     success "Anemometer installed successfully"
 
