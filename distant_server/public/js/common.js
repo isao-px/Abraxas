@@ -1,0 +1,41 @@
+export function fmt(v, d = 1) {
+  if (v === null || v === undefined || Number.isNaN(v)) return '–';
+  return Number(v).toLocaleString('fr-CH', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+
+export function naiveDate(iso) {
+  return new Date(/Z$|[+-]\d\d:?\d\d$/.test(iso) ? iso : iso + 'Z');
+}
+
+export function fmtClock(ms) {
+  return new Date(ms).toISOString().slice(11, 19);
+}
+
+export function fmtDate(date) {
+  return date.toLocaleDateString('fr-CH', { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+export function fmtElapsed(seconds) {
+  const s = Math.round(seconds);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = String(s % 60).padStart(2, '0');
+  if (h > 0) return h + ':' + String(m).padStart(2, '0') + ':' + sec;
+  return m + ':' + sec;
+}
+
+export function fmtDuration(seconds) {
+  const s = Math.round(seconds);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  if (h > 0) return h + ' h ' + String(m).padStart(2, '0') + ' min';
+  if (m > 0) return m + ' min';
+  return s + ' s';
+}
+
+export async function getJson(url, options) {
+  const response = await fetch(url, options);
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Erreur ' + response.status);
+  return data;
+}
