@@ -44,6 +44,34 @@ const maxOf = (a) => (a.length ? a.reduce((m, v) => (v > m ? v : m), -Infinity) 
 const round = (v, d) => (v === null || v === undefined ? null : Math.round(v * 10 ** d) / 10 ** d);
 const roundAll = (arr, d) => arr.map((v) => round(v, d));
 
+function percentile(a, p) {
+  if (!a.length) return null;
+  const sorted = [...a].sort((x, y) => x - y);
+  const pos = (sorted.length - 1) * p;
+  const lo = Math.floor(pos);
+  const hi = Math.ceil(pos);
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
+}
+const median = (a) => percentile(a, 0.5);
+function std(a) {
+  const m = mean(a);
+  return m === null ? null : Math.sqrt(mean(a.map((v) => (v - m) ** 2)));
+}
+function pearson(x, y) {
+  if (x.length < 4) return null;
+  const mx = mean(x);
+  const my = mean(y);
+  let sxy = 0;
+  let sxx = 0;
+  let syy = 0;
+  for (let i = 0; i < x.length; i++) {
+    sxy += (x[i] - mx) * (y[i] - my);
+    sxx += (x[i] - mx) ** 2;
+    syy += (y[i] - my) ** 2;
+  }
+  return sxx && syy ? sxy / Math.sqrt(sxx * syy) : null;
+}
+
 // Les horodatages du Raspberry sont « naïfs » (heure locale sans fuseau) : on les lit comme du UTC
 // pour ne manipuler que des durées. L'heure affichée est donc l'heure murale du Raspberry.
 function parseTimestamp(s) {
@@ -199,12 +227,24 @@ function meanInRange(a, from, to) {
   return mean(vals);
 }
 
-function detectManoeuvres(twaS, sog3) {
+function firstReach(a, from, to, level) {
+  for (let i = from; i <= Math.min(a.length - 1, to); i++) {
+    if (a[i] !== null && a[i] >= level) return i - from;
+  }
+  return null;
+}
+
+function meanAbsInRange(a, from, to) {
+  const vals = [];
+  for (let i = Math.max(0, from); i <= Math.min(a.length - 1, to); i++) if (a[i] !== null) vals.push(Math.abs(a[i]));
+  return mean(vals);
+}
+
+function detectManoeuvres(twaS, sog3, roll) {
   const cfg = CONFIG.MANOEUVRE;
   const n = twaS.length;
   const minSin = Math.sin(cfg.MIN_OFFAXIS_DEG * D2R);
 
-  // 1. Pour chaque seconde, de quel côté vient le vent (0 = trop près de l'axe du vent pour trancher).
   const side = new Int8Array(n);
   for (let i = 0; i < n; i++) {
     if (twaS[i] === null) continue;
@@ -212,7 +252,6 @@ function detectManoeuvres(twaS, sog3) {
     if (Math.abs(s) >= minSin) side[i] = s > 0 ? 1 : -1;
   }
 
-  // 2. Amures stables : suites de secondes avec le vent du même côté.
   const runs = [];
   let cur = null;
   for (let i = 0; i < n; i++) {
@@ -225,7 +264,6 @@ function detectManoeuvres(twaS, sog3) {
   }
   const solid = runs.filter((r) => r.b - r.a + 1 >= cfg.MIN_RUN_S);
 
-  // 3. Une manœuvre = passage d'une amure stable à l'amure opposée.
   const out = [];
   for (let k = 0; k + 1 < solid.length; k++) {
     const r1 = solid[k];
@@ -235,7 +273,6 @@ function detectManoeuvres(twaS, sog3) {
     const tE = r2.a;
     if (tE - tS > cfg.MAX_DURATION_S) continue;
 
-    // Le vent change de côté en passant par l'étrave (virement) ou par l'arrière (empannage).
     let cross = tS;
     let crossAbs = Infinity;
     for (let i = tS; i <= tE; i++) {
@@ -258,15 +295,6 @@ function detectManoeuvres(twaS, sog3) {
     }
     if (!Number.isFinite(vMin)) continue;
 
-    // Temps pour repartir : depuis la fin de la manœuvre jusqu'au retour à 90 % de la vitesse d'entrée.
-    let recover = null;
-    for (let i = tE; i <= Math.min(n - 1, tE + cfg.RECOVER_MAX_S); i++) {
-      if (sog3[i] !== null && sog3[i] >= cfg.RECOVER_FRACTION * vIn) {
-        recover = i - tE;
-        break;
-      }
-    }
-
     out.push({
       type,
       t_start: tS,
@@ -274,8 +302,15 @@ function detectManoeuvres(twaS, sog3) {
       t_cross: cross,
       v_in: round(vIn, 2),
       v_min: round(vMin, 2),
+      loss: round(vIn - vMin, 2),
       retention: round(Math.min(1, vMin / vIn), 3),
-      recover_s: recover,
+      recover_s: firstReach(sog3, tE, tE + cfg.RECOVER_MAX_S, cfg.RECOVER_FRACTION * vIn),
+      recover95_s: firstReach(sog3, tE, tE + 60, 0.95 * vIn),
+      recover_full_s: firstReach(sog3, tE, tE + 60, vIn),
+      v_after5: round(sog3[tE + 5] ?? null, 2),
+      twa_before: round(meanAbsInRange(twaS, tS - 8, tS), 0),
+      twa_after: round(meanAbsInRange(twaS, tE, tE + 8), 0),
+      roll_before: round(meanAbsInRange(roll, tS - 10, tS), 1),
     });
   }
   return out;
@@ -287,10 +322,39 @@ function summariseManoeuvres(list) {
   return {
     count: list.length,
     retention_mean: round(mean(list.map((m) => m.retention)), 3),
+    retention_median: round(median(list.map((m) => m.retention)), 3),
     recover_mean_s: round(mean(rec), 1),
+    recover_median_s: round(median(rec), 1),
     best: best ? { retention: best.retention, t: best.t_cross } : null,
   };
 }
+
+// Courbe polaire : vitesse par tranche d'angle au vent (signé, ou en valeur absolue).
+export function binPolar(twa, sog, { width = 10, signed = true, from = 0, to = 180 } = {}) {
+  const lo = signed ? -180 : from;
+  const hi = signed ? 180 : to;
+  const groups = new Map();
+  for (let i = 0; i < twa.length; i++) {
+    if (twa[i] === null || sog[i] === null || sog[i] < CONFIG.MIN_MOVING_KN) continue;
+    const a = signed ? twa[i] : Math.abs(twa[i]);
+    if (a < lo || a > hi) continue;
+    const k = Math.min(Math.floor((a - lo) / width), Math.ceil((hi - lo) / width) - 1);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(sog[i]);
+  }
+  return [...groups.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .filter(([, v]) => v.length >= 5)
+    .map(([k, v]) => ({
+      twa: round(lo + (k + 0.5) * width, 1),
+      n: v.length,
+      mean: round(mean(v), 2),
+      median: round(median(v), 2),
+      p90: round(percentile(v, 0.9), 2),
+    }));
+}
+
+export { mean, median, percentile, std, pearson, movingAvg };
 
 // ---------- Analyse complète ----------
 
@@ -389,27 +453,34 @@ export function analyseSession(db, id) {
   const rollSAbs = rollS.filter((v, i) => v !== null && statMask[i]).map(Math.abs);
   const pitchSVals = pitchS.filter((v, i) => v !== null && statMask[i]);
 
-  const manoeuvres = hasWind ? detectManoeuvres(twaS, movingAvg(sog, CONFIG.SMOOTH_MANOEUVRE_HALF_S)) : [];
+  const manoeuvres = hasWind ? detectManoeuvres(twaS, movingAvg(sog, CONFIG.SMOOTH_MANOEUVRE_HALF_S), roll) : [];
   const tacks = manoeuvres.filter((m) => m.type === 'tack');
   const gybes = manoeuvres.filter((m) => m.type === 'gybe');
   const allRecover = manoeuvres.map((m) => m.recover_s).filter((v) => v !== null);
 
   const stats = {
     speed_max: round(maxOf(sogS.filter((v) => v !== null)), 2),
+    duration_s: duration,
     speed_mean: round(mean(sog.filter((v, i) => v !== null && moving[i])), 2),
+    speed_median: round(median(sog.filter((v, i) => v !== null && moving[i])), 2),
     distance_nm: hasGps ? round(distanceNm, 3) : null,
     distance_km: hasGps ? round(distanceNm * 1.852, 3) : null,
     vmg_up_max: round(maxOf(upIdx.map((i) => vmgS[i])), 2),
     vmg_up_mean: round(mean(upIdx.map((i) => vmg[i])), 2),
+    vmg_up_median: round(median(upIdx.map((i) => vmg[i])), 2),
     vmg_down_max: round(maxOf(downIdx.map((i) => -vmgS[i])), 2),
     vmg_down_mean: round(mean(downIdx.map((i) => -vmg[i])), 2),
+    vmg_down_median: round(median(downIdx.map((i) => -vmg[i])), 2),
     pitch_mean: round(mean(pitchVals), 1),
+    pitch_median: round(median(pitchVals), 1),
     pitch_max: round(maxOf(pitchSVals), 1),
     roll_mean: round(mean(rollAbs), 1),
+    roll_median: round(median(rollAbs), 1),
     roll_max: round(maxOf(rollSAbs), 1),
     tack: summariseManoeuvres(tacks),
     gybe: summariseManoeuvres(gybes),
     recover_mean_s: round(mean(allRecover), 1),
+    recover_median_s: round(median(allRecover), 1),
   };
 
   return {
@@ -441,6 +512,7 @@ export function analyseSession(db, id) {
     },
     stats,
     manoeuvres,
+    polar: binPolar(twa, sog),
   };
 }
 

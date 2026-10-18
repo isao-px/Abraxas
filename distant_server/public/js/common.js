@@ -39,3 +39,42 @@ export async function getJson(url, options) {
   if (!response.ok) throw new Error(data.error || 'Erreur ' + response.status);
   return data;
 }
+
+export function storedCode() {
+  try {
+    return localStorage.getItem('abraxas-code') || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+function saveCode(code) {
+  try {
+    if (code) localStorage.setItem('abraxas-code', code);
+    else localStorage.removeItem('abraxas-code');
+  } catch (e) {}
+}
+
+export async function callWithCode(url, method, body) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let code = storedCode();
+    if (!code) {
+      code = prompt("Code d'accès") || '';
+      if (!code) throw new Error('Code requis.');
+    }
+    const options = { method, headers: { 'X-Access-Code': code } };
+    if (body !== undefined) {
+      options.headers['Content-Type'] = 'application/json';
+      options.body = JSON.stringify(body);
+    }
+    const response = await fetch(url, options);
+    const data = await response.json().catch(() => ({}));
+    if (response.status === 401) {
+      saveCode('');
+      if (attempt === 0) continue;
+    }
+    if (!response.ok) throw new Error(data.error || 'Erreur ' + response.status);
+    saveCode(code);
+    return data;
+  }
+}

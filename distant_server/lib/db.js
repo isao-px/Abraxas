@@ -55,6 +55,15 @@ CREATE TABLE IF NOT EXISTS imu_data (
     session_id INTEGER NOT NULL REFERENCES sessions(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS debriefs (
+    session_id INTEGER PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE,
+    status TEXT NOT NULL,            -- pending, ready ou error
+    text TEXT,
+    model TEXT,
+    error TEXT,
+    created_at TEXT
+);
+
 CREATE INDEX IF NOT EXISTS idx_gps_session ON gps_data (session_id, timestamp);
 CREATE INDEX IF NOT EXISTS idx_anemo_session ON anemo_data (session_id, timestamp);
 CREATE INDEX IF NOT EXISTS idx_imu_session ON imu_data (session_id, timestamp);

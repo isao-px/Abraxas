@@ -14,7 +14,12 @@ Dans l'onglet Node.js du site :
 - Commande de démarrage : `node server.js`
 - Version de Node.js : 25 (22.13 minimum, à cause du module `node:sqlite`)
 - Variable d'environnement `UPLOAD_CODE` : le code demandé sur la page d'import (sans lui, l'import est désactivé)
+- Pour les débriefs IA : `ANTHROPIC_API_KEY` (clé de l'API Anthropic, console.anthropic.com) et, si tu veux changer de modèle, `ANTHROPIC_MODEL` (`claude-sonnet-5-5` par défaut)
 - Facultatif : `DATA_DIR` (dossier de la base et des fichiers reçus, `./data` par défaut) et `MAX_UPLOAD_MB` (200 par défaut)
+
+Sans `ANTHROPIC_API_KEY`, tout fonctionne sauf les débriefs. Ils sont générés automatiquement à l'import d'une session (nouvelle ou modifiée) et peuvent être régénérés depuis le dashboard. Chaque génération est un appel payant à l'API : il faut un compte Anthropic avec du crédit.
+
+Renommer et supprimer une session demandent le même code que l'import (`UPLOAD_CODE`). Une session supprimée revient si tu réimportes une base qui la contient encore.
 
 Le port est lu dans la variable `PORT` fournie par le Manager. Après un changement de réglages, redémarre l'application.
 
