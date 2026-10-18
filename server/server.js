@@ -71,9 +71,12 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log(`Serveur prêt. Accessible sur http://<IP-RASPBERRY>:${PORT}`);
 });
 
-// 4. Serveur d'export de la base de données (port distinct du dashboard)
+// 4. Serveur d'export (port distinct du dashboard) : base de données et vidéos
 const EXPORT_PORT = 3001;
 const DB_PATH = path.join(__dirname, '..', 'sys.db'); // sys.db est à côté du dossier server/
+const SESSIONS_DIR = path.join(__dirname, '..', 'sessions'); // sessions/<id>/final.mp4
+const MERGE_FILE = path.join(__dirname, '..', 'list.txt'); // présent pendant la fusion de grp.py
+const activeTransfers = {}; // id de session -> nombre de téléchargements vidéo en cours
 const exportApp = express();
 
 exportApp.get('/', (req, res) => {
@@ -100,6 +103,78 @@ exportApp.get('/sys.db', (req, res) => {
     });
 });
 
+// Liste des sessions avec l'état de leur vidéo.
+function readSessions(callback) {
+    const sql = 'SELECT id, start, stop, name FROM sessions ORDER BY id DESC;';
+    execFile('sqlite3', ['-json', '-cmd', '.timeout 5000', DB_PATH, sql], (err, stdout, stderr) => {
+        if (err) {
+            console.error('Erreur lors de la lecture des sessions :', stderr || err.message);
+            return callback(err);
+        }
+        let rows = [];
+        try {
+            rows = JSON.parse(stdout.trim() || '[]');
+        } catch (e) {
+            return callback(e);
+        }
+        const merging = fs.existsSync(MERGE_FILE);
+        const sessions = rows.map((row, index) => {
+            let size = null;
+            try {
+                size = fs.statSync(path.join(SESSIONS_DIR, String(row.id), 'final.mp4')).size;
+            } catch (e) {}
+            let state = 'ok';
+            if (size === null) state = 'absent';
+            else if (!row.stop || (merging && index === 0)) state = 'busy'; // session en cours ou fusion en cours
+            return { id: row.id, start: row.start, stop: row.stop, name: row.name, size: size, state: state };
+        });
+        callback(null, sessions);
+    });
+}
+
+exportApp.get('/api/videos', (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    readSessions((err, sessions) => {
+        if (err) return res.status(500).json({ error: 'Impossible de lire les sessions' });
+        res.json(sessions);
+    });
+});
+
+// Sessions dont une vidéo est en cours d'envoi : la page attend la fin d'un envoi avant de lancer le suivant.
+exportApp.get('/api/transfers', (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    res.json(Object.keys(activeTransfers).map(Number));
+});
+
+exportApp.get('/video/:id', (req, res) => {
+    if (!/^[0-9]+$/.test(req.params.id)) {
+        return res.status(400).send('Identifiant de session invalide');
+    }
+    const id = parseInt(req.params.id, 10);
+
+    readSessions((err, sessions) => {
+        if (err) return res.status(500).send('Impossible de lire les sessions');
+        const session = sessions.find((s) => s.id === id);
+        if (!session || session.state === 'absent') return res.status(404).send('Aucune vidéo pour cette session');
+        if (session.state === 'busy') return res.status(409).send('Vidéo en cours de fusion, réessaie dans quelques instants');
+
+        const start = String(session.start).slice(0, 19).replace('T', '_').replace(/:/g, '-').replace(/[^0-9A-Za-z_-]/g, '');
+        const name = `session_${id}_${start}.mp4`;
+
+        activeTransfers[id] = (activeTransfers[id] || 0) + 1;
+        res.on('close', () => {
+            activeTransfers[id] -= 1;
+            if (activeTransfers[id] <= 0) delete activeTransfers[id];
+        });
+
+        // res.download gère aussi les requêtes partielles (Range) : un téléchargement interrompu peut reprendre.
+        res.set('Cache-Control', 'no-store');
+        res.download(path.join(SESSIONS_DIR, String(id), 'final.mp4'), name, (downloadErr) => {
+            if (downloadErr && !res.headersSent) res.status(500).send('Impossible d\'envoyer la vidéo');
+        });
+    });
+});
+
 exportApp.listen(EXPORT_PORT, '0.0.0.0', () => {
-    console.log(`Export de la base prêt sur http://<IP-RASPBERRY>:${EXPORT_PORT}`);
+    console.log(`Export de la base et des vidéos prêt sur http://<IP-RASPBERRY>:${EXPORT_PORT}`);
 });
