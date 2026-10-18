@@ -24,7 +24,7 @@ import { getAnalysis, invalidateAnalyses } from './lib/analysis.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const PORT = Number(process.env.PORT) || 8080;
-const UPLOAD_CODE = process.env.UPLOAD_CODE || '';
+const UPLOAD_CODE = process.env.UPLOAD_CODE || 'test';
 const MAX_UPLOAD_BYTES = (Number(process.env.MAX_UPLOAD_MB) || 200) * 1024 * 1024;
 const MAX_UPLOAD_MB = Math.round(MAX_UPLOAD_BYTES / 1024 / 1024);
 
