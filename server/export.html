@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abraxas – Export</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: system-ui, sans-serif;
+            background-color: #f0eee6;
+            color: #141413;
+        }
+
+        main {
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin: 0 0 28px;
+            line-height: 1.5;
+            opacity: 0.7;
+        }
+
+        button {
+            width: 100%;
+            min-height: 72px;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 8px;
+            background-color: #141413;
+            color: #f0eee6;
+            font: inherit;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:focus-visible {
+            outline: 3px solid #141413;
+            outline-offset: 3px;
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: progress;
+        }
+
+        #status {
+            min-height: 3em;
+            margin: 20px 0 0;
+            font-size: 0.95rem;
+            opacity: 1;
+        }
+
+        #status.error { color: #b3261e; }
+    </style>
+</head>
+
+<body>
+<main>
+    <h1>Base de données</h1>
+    <p>Télécharge toutes les sessions enregistrées sur l'Abraxas dans un seul fichier.</p>
+
+    <button id="download" type="button">Télécharger la base de données</button>
+    <p id="status" role="status" aria-live="polite"></p>
+</main>
+
+<script>
+    const button = document.getElementById('download');
+    const status = document.getElementById('status');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    // Le nom est généré ici : l'horloge du téléphone est fiable, celle du Raspberry (sans RTC ni internet) pas forcément.
+    function fileName() {
+        const d = new Date();
+        return `abraxas_${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+            + `_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}.db`;
+    }
+
+    function show(message, isError = false) {
+        status.textContent = message;
+        status.classList.toggle('error', isError);
+    }
+
+    button.addEventListener('click', async () => {
+        button.disabled = true;
+        show('Préparation du fichier…');
+
+        try {
+            const response = await fetch('/sys.db', { cache: 'no-store' });
+            if (!response.ok) {
+                throw new Error((await response.text()) || `Erreur ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            const name = fileName();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = name;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+            show(`Fichier téléchargé : ${name} (${(blob.size / 1024).toFixed(0)} Ko)`);
+        } catch (e) {
+            show(`Échec du téléchargement : ${e.message}. Vérifie que tu es bien connecté au Wi-Fi Abraxas.`, true);
+        } finally {
+            button.disabled = false;
+        }
+    });
+</script>
+</body>
+
+</html>
