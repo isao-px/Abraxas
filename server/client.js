@@ -3,18 +3,18 @@ function updateData() {
     const awa_rad = sensorData.awa * (Math.PI / 180);
     const cog_rad = sensorData.cog * (Math.PI / 180);
 
-    // Méchants calculs > cf. le carnet pour le détail
-    const tw_x = sensorData.aws * Math.sin(cog_rad + awa_rad) + sensorData.sog * Math.sin(cog_rad);
-    const tw_y = sensorData.aws * Math.cos(cog_rad + awa_rad) + sensorData.sog * Math.cos(cog_rad);
+    // Calculs du vent réel et de la VMG > cf. le rapport pour le détail
+    const tw_x = sensorData.aws * Math.cos(cog_rad + awa_rad) + sensorData.sog * Math.cos(cog_rad);
+    const tw_y = sensorData.aws * Math.sin(cog_rad + awa_rad) + sensorData.sog * Math.sin(cog_rad);
     const tws = Math.sqrt(tw_x * tw_x + tw_y * tw_y);
-    const twd = Math.atan2(tw_x, tw_y);
-    const twa = cog_rad - twd;
+    const twd_rad = Math.atan2(tw_y, tw_x);
+    const twa = twd_rad - cog_rad;
     const vmg = sensorData.sog * Math.cos(twa);
 
     // Entretien du tableau d'affichage. Peut-être créer un historique en sql
     displayData.tws = tws;
-    displayData.twa = twa * (180 / Math.PI);
-    displayData.vmg = vmg;
+    displayData.twa = twa * (180 / Math.PI) + 180; // Ajustement à la convention : direction de la source du vent
+    displayData.vmg = - vmg; // Ajustement à la convention : vitesse positive si remonte le vent
     displayData.sog = sensorData.sog;
     displayData.pitch = (sensorData.pitch * 90 + 90).toFixed(1);
     displayData.roll = (sensorData.roll * 90).toFixed(1);
