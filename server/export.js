@@ -37,7 +37,7 @@ button.addEventListener('click', async () => {
 
         show(`Fichier téléchargé : ${name} (${(blob.size / 1024).toFixed(0)} Ko)`);
     } catch (e) {
-        show(`Échec du téléchargement : ${e.message}. Vérifie que tu es bien connecté au Wi-Fi Abraxas.`, true);
+        show(`Téléchargement échoué : ${e.message}`, true);
     } finally {
         button.disabled = false;
     }
@@ -117,7 +117,7 @@ async function loadVideos() {
         for (const video of videos) addVideoRow(video);
         updateVideoButton();
     } catch (e) {
-        videoList.textContent = `Impossible de lire la liste : ${e.message}. Vérifie que tu es bien connecté au Wi-Fi Abraxas.`;
+        videoList.textContent = `Erreur lors de la liste : ${e.message}. Connection Wifi Abraxas probablement perdue`;
     }
 }
 
@@ -146,7 +146,7 @@ async function waitForTransfer(id) {
             else if (started) return;
             else {
                 waited += 1.5;
-                if (waited > 15) return; // l'envoi n'a jamais démarré (refus ou erreur)
+                if (waited > 15) return; // watchdog
             }
         } catch (e) {
             failures += 1;
@@ -165,20 +165,20 @@ videoButton.addEventListener('click', async () => {
     for (let i = 0; i < chosen.length; i++) {
         if (stopRequested) break;
         const v = chosen[i];
-        showVideo(`Vidéo ${i + 1} sur ${chosen.length} : session ${v.id} (${formatSize(v.size)}) en cours d'envoi…`);
+        showVideo(`Vidéo ${i + 1} sur ${chosen.length} : session ${v.id} (${formatSize(v.size)}) en cours d'envoi`);
         startDownload(v.id);
         await waitForTransfer(v.id);
     }
 
     queueRunning = false;
     stopButton.hidden = true;
-    showVideo(stopRequested ? 'File arrêtée.' : 'Terminé. Les vidéos sont dans les téléchargements de cet appareil.');
+    showVideo(stopRequested ? 'File arrêtée.' : 'Terminé. Les vidéos sont dans les téléchargements');
     updateVideoButton();
 });
 
 stopButton.addEventListener('click', () => {
     stopRequested = true;
-    showVideo("Arrêt après la vidéo en cours…");
+    showVideo("Arrêt après la vidéo en cours");
 });
 
 loadVideos();
