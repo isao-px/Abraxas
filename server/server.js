@@ -82,6 +82,12 @@ const exportApp = express();
 exportApp.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'export.html'));
 });
+exportApp.get('/export.css', (req, res) => {
+    res.sendFile(path.join(__dirname, 'export.css'));
+});
+exportApp.get('/export.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'export.js'));
+});
 
 exportApp.get('/sys.db', (req, res) => {
     if (!fs.existsSync(DB_PATH)) {
