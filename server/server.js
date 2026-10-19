@@ -98,10 +98,38 @@ exportApp.get('/sys.db', (req, res) => {
             console.error('Erreur lors de l\'export :', stderr || err.message);
             return res.status(500).send('Impossible de copier la base de données');
         }
-        res.set('Cache-Control', 'no-store');
-        res.download(tmp, 'sys.db', () => fs.unlink(tmp, () => {}));
+        // La copie reçoit en plus la table videos : le serveur distant s'en sert pour caler les vidéos sur les mesures.
+        execFile('sqlite3', [tmp, videoStartsSql()], (videoErr, videoOut, videoStderr) => {
+            if (videoErr) console.error('Impossible d\'ajouter les débuts de vidéo :', videoStderr || videoErr.message);
+            res.set('Cache-Control', 'no-store');
+            res.download(tmp, 'sys.db', () => fs.unlink(tmp, () => {}));
+        });
     });
 });
+
+// Instant du début de chaque vidéo (sessions/<id>/start.txt, écrit par vid.py à l'apparition du premier segment).
+// Même horloge que les mesures : c'est ce qui permet de synchroniser la vidéo avec le curseur du dashboard.
+function videoStartsSql() {
+    let dirs = [];
+    try {
+        dirs = fs.readdirSync(SESSIONS_DIR);
+    } catch (e) {}
+    const rows = [];
+    for (const dir of dirs) {
+        if (!/^[0-9]+$/.test(dir)) continue;
+        let start;
+        try {
+            start = fs.readFileSync(path.join(SESSIONS_DIR, dir, 'start.txt'), 'utf-8').trim();
+        } catch (e) {
+            continue;
+        }
+        if (!/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(start)) continue;
+        rows.push(`(${parseInt(dir, 10)}, '${start.replace(' ', 'T')}')`);
+    }
+    let sql = 'CREATE TABLE IF NOT EXISTS videos (session_id INTEGER PRIMARY KEY, start DATETIME NOT NULL);';
+    if (rows.length) sql += `INSERT OR REPLACE INTO videos (session_id, start) VALUES ${rows.join(', ')};`;
+    return sql;
+}
 
 // Liste des sessions avec l'état de leur vidéo.
 function readSessions(callback) {

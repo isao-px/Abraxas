@@ -16,31 +16,33 @@ def stop_handler(sig, frame):
 signal.signal(signal.SIGTERM, stop_handler)
 signal.signal(signal.SIGINT, stop_handler)
 
+# Phrase NMEA attendue : $--MWV,<angle>,<R|T>,<vitesse>,<unité N|M|K>,<statut A|V>*hh
+# La vitesse est toujours enregistrée en nœuds, quelle que soit l'unité envoyée par l'anémomètre.
+TO_KNOTS = {'N': 1.0, 'M': 3600 / 1852, 'K': 1 / 1.852}
+
 def acquisition():
-    line = anemo.readline().decode('utf-8').strip()
-    if line:
-        try:
-            awa = ""
-            aws = ""
-            arg = 1
-            for i in line[7:]:
-                if i != "," and arg == 1:
-                    awa += i
-                elif i != "," and arg == 3:
-                    aws += i
-                elif i == ",":
-                    arg += 1
-            try:
-                return int(awa), float(aws)
-            except ValueError:
-                logging.warning(f"Received data contains non-numeric values: {line}")
-                return False
-        except IndexError:
-            logging.warning(f"Received data is not in the expected format: {line}")
+    line = anemo.readline().decode('utf-8', errors='ignore').strip()
+    if not line:
+        return False
+    try:
+        fields = line.split('*')[0].split(',')
+        if len(fields) < 6 or not fields[0].endswith('MWV'):
+            logging.debug(f"Ignored sentence: {line}")
             return False
-        except Exception as e:
-            logging.error(f"Error during data acquisition: {e}")
+        angle, reference, speed, unit, status = fields[1:6]
+        # R : vent apparent (relatif au bateau). A : mesure valide.
+        if reference != 'R' or status != 'A':
+            logging.debug(f"Ignored sentence (not a valid apparent wind): {line}")
             return False
+        awa = float(angle) % 360
+        aws = float(speed) * TO_KNOTS[unit]
+        return round(awa, 1), round(aws, 2)
+    except (ValueError, KeyError):
+        logging.warning(f"Received data is not in the expected format: {line}")
+        return False
+    except Exception as e:
+        logging.error(f"Error during data acquisition: {e}")
+        return False
 
 # MQTT
 BROKER_ADDRESS = "localhost"
