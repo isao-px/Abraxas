@@ -16,7 +16,6 @@ def stop_handler(sig, frame):
 signal.signal(signal.SIGTERM, stop_handler)
 signal.signal(signal.SIGINT, stop_handler)
 
-# Même ordre que les colonnes de imu_data (accel, gyro, mag) : db_recording.py insère le tuple tel quel.
 def acquisition():
     mag_x, mag_y, mag_z = imu.read_magnetometer_data()
     accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z = imu.read_accelerometer_gyro_data()
@@ -60,8 +59,8 @@ try:
         imu_data = acquisition()
 
         try:
-            client.publish(f"{TOPIC_PREFIX}/pitch", str(imu_data[1]), retain=True)  # accel_y
-            client.publish(f"{TOPIC_PREFIX}/roll", str(imu_data[0]), retain=True)  # accel_x
+            client.publish(f"{TOPIC_PREFIX}/pitch", str(imu_data[1]), retain=True)
+            client.publish(f"{TOPIC_PREFIX}/roll", str(imu_data[0]), retain=True)
             client.publish(f"{TOPIC_PREFIX}/full", str(imu_data), retain=True)
         except Exception as e:
             logging.warning(f"MQTT transfert error : {e}")

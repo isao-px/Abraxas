@@ -40,8 +40,6 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("capteur/imu/full")
 
 def on_message(client, userdata, msg):
-    # Les capteurs publient avec retain=True : à l'abonnement, le broker renvoie la dernière mesure
-    # de la session précédente. Elle serait enregistrée dans la nouvelle session avec un horodatage faux.
     if msg.retain:
         return
     topic = msg.topic

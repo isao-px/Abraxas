@@ -16,8 +16,7 @@ def stop_handler(sig, frame):
 signal.signal(signal.SIGTERM, stop_handler)
 signal.signal(signal.SIGINT, stop_handler)
 
-# Phrase NMEA attendue : $--MWV,<angle>,<R|T>,<vitesse>,<unité N|M|K>,<statut A|V>*hh
-# La vitesse est toujours enregistrée en nœuds, quelle que soit l'unité envoyée par l'anémomètre.
+# Dico pour la conversion avec les multiples
 TO_KNOTS = {'N': 1.0, 'M': 3600 / 1852, 'K': 1 / 1.852}
 
 def acquisition():
@@ -30,7 +29,7 @@ def acquisition():
             logging.debug(f"Ignored sentence: {line}")
             return False
         angle, reference, speed, unit, status = fields[1:6]
-        # R : vent apparent (relatif au bateau). A : mesure valide.
+        # Selon la doc par principe mais impossible d'avoir du vent réel
         if reference != 'R' or status != 'A':
             logging.debug(f"Ignored sentence (not a valid apparent wind): {line}")
             return False
