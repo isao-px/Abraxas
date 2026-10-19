@@ -25,6 +25,10 @@ user_check() {
 	fi
 }
 
+WIFI_COUNTRY="CH"
+HOTSPOT_SSID="Abraxas"
+HOTSPOT_ADDRESS="10.42.0.1"
+
 counter=0
 next_step() {
     counter=$((counter + 1))
@@ -64,6 +68,8 @@ main() {
     next_step
     apt -y install ffmpeg
     next_step
+    apt -y install rpicam-apps-lite
+    next_step
     apt -y install nodejs
     next_step
     apt -y install npm
@@ -88,6 +94,9 @@ main() {
     mv /home/"$user"/abraxas/SYS/*.py /home/"$user"/
     mv /home/"$user"/abraxas/config.sql /home/"$user"/config.sql
     mv /home/"$user"/abraxas/auto_install.exp /home/"$user"/auto_install.exp
+    # Dashboard : port 3000 envoi de données : port 3001
+    mkdir -p /home/"$user"/server
+    mv /home/"$user"/abraxas/server/* /home/"$user"/server/
     rm -rf /home/"$user"/abraxas
     next_step
     success "Code downloaded successfully"
@@ -139,13 +148,13 @@ main() {
     next_step
     touch /home/"$user"/sys.db
     sqlite3 /home/"$user"/sys.db < config.sql
-    chown user sys.db
+    chown "$user":"$user" sys.db
     next_step
     success "Database initialized successfully"
 
 	# Configuration of the server
 	cd /home/"$user"/ || exit
-	pip3 install paho-mqtt --break-system-packages --root-user-action
+	pip3 install paho-mqtt --break-system-packages --root-user-action=ignore
 	next_step
 	apt -y install mosquitto mosquitto-clients
 	next_step
@@ -153,7 +162,6 @@ main() {
 	systemctl enable mosquitto
 	next_step
 	
-	mkdir server
 	cd /home/"$user"/server || exit
 	next_step
 	npm init -y
@@ -167,31 +175,88 @@ main() {
 
 	# Wifi hotspot
     inform "Configuring the wifi hotspot"
+    if [ -z "$(raspi-config nonint get_wifi_country 2>/dev/null)" ]; then
+        raspi-config nonint do_wifi_country "$WIFI_COUNTRY"
+    fi
+    rfkill unblock wifi
     nmcli connection delete Hotspot 2>/dev/null || true
     nmcli connection add type wifi ifname wlan0 con-name Hotspot \
         autoconnect yes \
-        ssid Abraxas \
+        ssid "$HOTSPOT_SSID" \
         802-11-wireless.mode ap \
         802-11-wireless.band bg \
         802-11-wireless.channel 6 \
+        802-11-wireless.powersave 2 \
         ipv4.method shared \
+        ipv4.addresses "$HOTSPOT_ADDRESS"/24 \
+        ipv6.method disabled \
         connection.autoconnect-priority -10
     next_step
     success "Wifi hotspot configured successfully"
 
-    # Configuration of cron
-    inform "Configuring cron"
-    chmod +x /home/"$user"/interface.py
-    crontab -u "$user" -l > /tmp/cron_config
-    echo "@reboot /home/$user/env/bin/python3 /home/$user/interface.py" >> /tmp/cron_config
-	echo "@reboot node /home/$user/server/server.js" >> /tmp/cron_config
+    # Systemd
+    inform "Configuring the startup services"
+    touch /home/"$user"/sys.log
+    chown -R "$user":"$user" /home/"$user"/sys.log /home/"$user"/sys.db /home/"$user"/server
+
+    cat > /etc/systemd/system/abraxas-gpio.service <<EOF
+[Unit]
+Description=Abraxas - GPIO daemon (LEDs)
+
+[Service]
+User=$user
+SupplementaryGroups=gpio
+WorkingDirectory=/home/$user
+ExecStart=/home/$user/env/bin/python3 /home/$user/gpio_daemon.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    cat > /etc/systemd/system/abraxas-interface.service <<EOF
+[Unit]
+Description=Abraxas - buttons and session control
+After=abraxas-gpio.service mosquitto.service
+Wants=abraxas-gpio.service mosquitto.service
+
+[Service]
+User=$user
+SupplementaryGroups=gpio video
+WorkingDirectory=/home/$user
+ExecStartPre=/bin/sh -c 'until [ -S /tmp/gpio_daemon.sock ]; do sleep 1; done'
+ExecStart=/home/$user/env/bin/python3 /home/$user/interface.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    cat > /etc/systemd/system/abraxas-server.service <<EOF
+[Unit]
+Description=Abraxas - live dashboard (port 3000) and export (port 3001)
+After=network.target abraxas-gpio.service mosquitto.service
+Wants=abraxas-gpio.service mosquitto.service
+
+[Service]
+User=$user
+WorkingDirectory=/home/$user/server
+ExecStartPre=/bin/sh -c 'until [ -S /tmp/gpio_daemon.sock ]; do sleep 1; done'
+ExecStart=/usr/bin/node /home/$user/server/server.js
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
     next_step
-    crontab -u "$user" /tmp/cron_config
-    rm /tmp/cron_config
-    echo "Current cron configuration for $user:"
-    crontab -u "$user" -l
+
+    systemctl daemon-reload
+    systemctl enable abraxas-gpio.service abraxas-interface.service abraxas-server.service
     next_step
-    success "cron configured successfully"
+    success "Startup services configured successfully"
 
     # Cleanup
     cd /home/"$user"/ || exit
@@ -214,7 +279,9 @@ success "Progress bar script installed successfully"
 source "progress_bar.sh"
 
 inform "This might take a few minutes"
-main > >(progress_bar::process "Configuring the Raspberry" 39) 2>&1
+main > >(progress_bar::process "Configuring the Raspberry" 43) 2>&1
 echo
 echo
+inform "After the reboot, join the Wi-Fi '$HOTSPOT_SSID' and open http://$HOTSPOT_ADDRESS:3000 (dashboard) or http://$HOTSPOT_ADDRESS:3001 (export)"
+sleep 5
 reboot
