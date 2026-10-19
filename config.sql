@@ -42,7 +42,7 @@ CREATE TABLE anemo_data (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     timestamp DATETIME NOT NULL,
 
-    awa INTEGER NOT NULL,
+    awa REAL NOT NULL,
     aws REAL NOT NULL,
 
     session_id INTAGER NOT NULL);

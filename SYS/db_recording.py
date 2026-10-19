@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from classes import *
 import sys
+import ast
 import queue
 import paho.mqtt.client as mqtt
 from datetime import datetime
@@ -39,10 +40,17 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("capteur/imu/full")
 
 def on_message(client, userdata, msg):
+    # Les capteurs publient avec retain=True : à l'abonnement, le broker renvoie la dernière mesure
+    # de la session précédente. Elle serait enregistrée dans la nouvelle session avec un horodatage faux.
+    if msg.retain:
+        return
     topic = msg.topic
     payload = msg.payload.decode('utf-8')
     # logging.debug(f"Received message on topic {topic} : {payload}")
-    q.put((datetime.now().isoformat(), topic, eval(payload)))
+    try:
+        q.put((datetime.now().isoformat(), topic, ast.literal_eval(payload)))
+    except (ValueError, SyntaxError):
+        logging.warning(f"Unreadable payload on topic {topic}: {payload}")
 
 try:
     client = mqtt.Client(client_id=CLIENT_ID)
