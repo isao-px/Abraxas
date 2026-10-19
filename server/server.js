@@ -17,7 +17,7 @@ client.connect('/tmp/gpio_daemon.sock', () => {
     client.write('2:ON');
 });
 
-// 1. Servir les différents fichiers
+// Servir les différents fichiers
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client.html'));
 });
@@ -31,7 +31,7 @@ app.get('/horizon.png', (req, res) => {
     res.sendFile(path.join(__dirname, 'horizon.png'));
 });
 
-// 2. Gestion des connexions WebSocket
+// Gestion des connexions WebSocket
 io.on('connection', (socket) => {
     console.log('Un client est connecté :', socket.id);
 
@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// 3. Mise à jour des données à chaque réception
+// Mise à jour des données à chaque réception
 const clientMqtt = mqtt.connect('mqtt://localhost');
 
 clientMqtt.on('connect', () => {
@@ -71,7 +71,7 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log(`Serveur prêt. Accessible sur http://<IP-RASPBERRY>:${PORT}`);
 });
 
-// 4. Serveur d'export (port distinct du dashboard) : base de données et vidéos
+// Démarrage sur le port 3001
 const EXPORT_PORT = 3001;
 const DB_PATH = path.join(__dirname, '..', 'sys.db'); // sys.db est à côté du dossier server/
 const SESSIONS_DIR = path.join(__dirname, '..', 'sessions'); // sessions/<id>/final.mp4
@@ -88,8 +88,7 @@ exportApp.get('/sys.db', (req, res) => {
         return res.status(404).send('Base de données introuvable');
     }
 
-    // On ne sert pas sys.db directement : db_recording.py y écrit en continu.
-    // VACUUM INTO crée une copie cohérente, qu'on supprime une fois envoyée.
+    // Vacuum into en tmp
     const tmp = path.join(os.tmpdir(), `abraxas_export_${Date.now()}_${process.pid}.db`);
     const sql = `VACUUM INTO '${tmp.replace(/'/g, "''")}'`;
 
@@ -98,7 +97,7 @@ exportApp.get('/sys.db', (req, res) => {
             console.error('Erreur lors de l\'export :', stderr || err.message);
             return res.status(500).send('Impossible de copier la base de données');
         }
-        // La copie reçoit en plus la table videos : le serveur distant s'en sert pour caler les vidéos sur les mesures.
+        // Syncro des vidéos
         execFile('sqlite3', [tmp, videoStartsSql()], (videoErr, videoOut, videoStderr) => {
             if (videoErr) console.error('Impossible d\'ajouter les débuts de vidéo :', videoStderr || videoErr.message);
             res.set('Cache-Control', 'no-store');
@@ -107,8 +106,7 @@ exportApp.get('/sys.db', (req, res) => {
     });
 });
 
-// Instant du début de chaque vidéo (sessions/<id>/start.txt, écrit par vid.py à l'apparition du premier segment).
-// Même horloge que les mesures : c'est ce qui permet de synchroniser la vidéo avec le curseur du dashboard.
+// start.txt dans les métadonnées
 function videoStartsSql() {
     let dirs = [];
     try {
@@ -131,7 +129,7 @@ function videoStartsSql() {
     return sql;
 }
 
-// Liste des sessions avec l'état de leur vidéo.
+// Liste sessions
 function readSessions(callback) {
     const sql = 'SELECT id, start, stop, name FROM sessions ORDER BY id DESC;';
     execFile('sqlite3', ['-json', '-cmd', '.timeout 5000', DB_PATH, sql], (err, stdout, stderr) => {
@@ -168,7 +166,7 @@ exportApp.get('/api/videos', (req, res) => {
     });
 });
 
-// Sessions dont une vidéo est en cours d'envoi : la page attend la fin d'un envoi avant de lancer le suivant.
+// Réglage attente envoi
 exportApp.get('/api/transfers', (req, res) => {
     res.set('Cache-Control', 'no-store');
     res.json(Object.keys(activeTransfers).map(Number));
@@ -195,7 +193,7 @@ exportApp.get('/video/:id', (req, res) => {
             if (activeTransfers[id] <= 0) delete activeTransfers[id];
         });
 
-        // res.download gère aussi les requêtes partielles (Range) : un téléchargement interrompu peut reprendre.
+        // res.download > tolèrant
         res.set('Cache-Control', 'no-store');
         res.download(path.join(SESSIONS_DIR, String(id), 'final.mp4'), name, (downloadErr) => {
             if (downloadErr && !res.headersSent) res.status(500).send('Impossible d\'envoyer la vidéo');
