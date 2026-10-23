@@ -39,3 +39,4 @@ If everything goes well, a few minutes later, the Raspberry will reboot, and you
 - [Abraxas - server](https://github.com/isao-px/Abraxas_server)
 - [Abraxas - 3D files](https://github.com/isao-px/Abraxas_3D-files)
 - [Abraxas - PCB](https://github.com/isao-px/Abraxas_PCB)
+- [Abraxas - Typst](https://github.com/isao-px/Abraxas_typst)
