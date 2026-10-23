@@ -6,7 +6,7 @@ For full documentation and project description, read :
 | PDF      | Typst    |
 |:-------- |:-------- |
 |[Abraxas - Documentation.pdf](https://kdrive.infomaniak.com/app/share/136914/3886bf72-c4e0-4f9a-8e1f-7bd9e311ac93) (French)|[Abraxas - Documentation.typ](https://github.com/isao-px/Abraxas_typst/blob/main/main_fr.typ) (French)|
-|[Abraxas - Documentation.pdf]() (English)|[Abraxas - Documentation.typ](https://github.com/isao-px/Abraxas_typst/blob/main/main_en.typ) (English)|
+|[Abraxas - Documentation.pdf](https://kdrive.infomaniak.com/app/share/136914/b201cae0-3f2e-4263-b3e3-23ac7567736a) (English)|[Abraxas - Documentation.typ](https://github.com/isao-px/Abraxas_typst/blob/main/main_en.typ) (English)|
 
 ## Hardware
 The full hardware setup is described in the documentation, but for the installation you'll only need a network connected Raspberry Pi Zero or a Raspberry Pi Zero 2.
