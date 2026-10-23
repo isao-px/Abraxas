@@ -5,8 +5,8 @@ Lightweight and portable system developed to monitor inshore sailing training, a
 For full documentation and project description, read :
 | PDF      | Typst    |
 |:-------- |:-------- |
-|[Abraxas - Documentation.pdf](https://kdrive.infomaniak.com/app/share/136914/3886bf72-c4e0-4f9a-8e1f-7bd9e311ac93) (French)|[Abraxas - Documentation.typ](https://github.com/isao-px/Abraxas_typst/blob/main/main_fr.typ) (French)|
-|[Abraxas - Documentation.pdf](https://kdrive.infomaniak.com/app/share/136914/b201cae0-3f2e-4263-b3e3-23ac7567736a) (English)|[Abraxas - Documentation.typ](https://github.com/isao-px/Abraxas_typst/blob/main/main_en.typ) (English)|
+|[Abraxas - Documentation.pdf](https://kdrive.infomaniak.com/2/app/136914/share/3886bf72-c4e0-4f9a-8e1f-7bd9e311ac93/files/294825/download) (French)|[Abraxas - Documentation.typ](https://github.com/isao-px/Abraxas_typst/blob/main/main_fr.typ) (French)|
+|[Abraxas - Documentation.pdf](https://kdrive.infomaniak.com/2/app/136914/share/b201cae0-3f2e-4263-b3e3-23ac7567736a/files/295061/download) (English)|[Abraxas - Documentation.typ](https://github.com/isao-px/Abraxas_typst/blob/main/main_en.typ) (English)|
 
 ## Hardware
 The full hardware setup is described in the documentation, but for the installation you'll only need a network connected Raspberry Pi Zero or a Raspberry Pi Zero 2.
@@ -16,8 +16,8 @@ If you have a Raspberry Pi Zero or a Raspberry Pi Zero 2 with a blank SD card an
 
 You can get an image of a fully set up version of Raspberry Pi OS Lite for Abraxas. You only have to flash it to your SD card, insert it in your Raspberry, and your Abraxas will be operational since the first boot without any further configuration.
 
-- [Abraxas OS for Raspberry Pi Zero]()
-- [Abraxas OS for Raspberry Pi Zero 2]()
+- [Abraxas OS for Raspberry Pi Zero](https://kdrive.infomaniak.com/2/app/136914/share/12fb5b5c-fca6-4178-a3ab-39abaff42644/files/295125/download)
+- [Abraxas OS for Raspberry Pi Zero 2](https://kdrive.infomaniak.com/2/app/136914/share/683f44f9-902b-4258-8ae8-b9af6a489d83/files/295128/download)
 
 ## Full install
 
